@@ -6,7 +6,9 @@
 ######################################
 
 VSOURCES = \
-	map-color.v 
+	map-color.v \
+        map-color-2.v \
+	knapsack.v
 
 EDIFS  = $(patsubst %.v, %.edif, $(VSOURCES))
 QMASMS = $(patsubst %.v, %.qmasm, $(VSOURCES))

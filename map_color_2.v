@@ -9,7 +9,7 @@
 //
 // Author: Scott Pakin <pakin@lanl.gov>
 
-module map_color (GC, WC, QC, MC, EC, valid);
+module map_color_2 (GC, WC, QC, MC, EC, valid);
    input [1:0] GC;
    input [1:0] WC;
    input [1:0] QC;
