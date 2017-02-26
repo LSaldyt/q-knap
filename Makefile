@@ -20,7 +20,7 @@ TOQUBO = qmasm
 all: $(QUBOS)
 
 %.edif: %.v synth.ys
-	$(YOSYS) -q $< synth.ys -b edif -o $@
+	$(YOSYS) -q $< yoscripts/synth.ys -b edif -o $@
 
 %.qmasm: %.edif
 	$(TOQMSM) $< > $@
