@@ -24,32 +24,32 @@
 */ 
 
 module knapsack #(
-    parameter max_weight = 15,
+    parameter max_weight = 16,
     parameter min_value  = 15
     )
-    (choices, valid);
-    input [4:0] choices; // 5 bits indicating which items were chosen 
+    (A, B, C, D, E, valid);
+    input A, B, C, D, E;
 
-    wire [4:0] total_weight = 5'd0;
-    wire [4:0] total_value  = 5'd0;
+    wire [5:0] total_weight;
+    wire [5:0] total_value;
 
     // If an item is chosen, add its weight and numeric value
-    // (If an item is NOT chosen, choices[n] will be zero)
-    assign total_weight = total_weight + (12 * choices[0]); 
-    assign total_value  = total_value  + (4  * choices[0]); 
-    assign total_weight = total_weight + (1  * choices[1]);
-    assign total_value  = total_value  + (2  * choices[1]);
-    assign total_weight = total_weight + (2  * choices[2]);
-    assign total_value  = total_value  + (2  * choices[2]);
-    assign total_weight = total_weight + (1  * choices[3]);
-    assign total_value  = total_value  + (1  * choices[3]);
-    assign total_weight = total_weight + (4  * choices[4]);
-    assign total_value  = total_value  + (10 * choices[4]);
+    assign total_weight = 12 * A  
+                        + 1  * B 
+                        + 2  * C 
+                        + 1  * D 
+                        + 4  * E;
+
+    assign total_value = 4  * A
+                       + 2  * B
+                       + 2  * C
+                       + 1  * D
+                       + 10 * E;
     
     wire weight_valid;
-    assign weight_valid = total_weight < max_weight;
+    assign weight_valid = total_weight <= max_weight;
     wire value_valid;
-    assign value_valid = total_value >= min_value;
+    assign value_valid = total_value > min_value;
 
     output valid;
     assign valid = weight_valid && value_valid;
