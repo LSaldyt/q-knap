@@ -14,11 +14,15 @@
 *
 * Solution (0-1 knapsack):
 *
-* V = $15, Wv = (8kg)
+* V = $15
 *
 *  Given a proposed selection of items, all you have to do to verify the
 *  proposal is to add up the weights and see you get at most W, and add up
 *  the values and see you get at least V
+*
+*   The decision problem form of the knapsack problem (Can a value of at least V be achieved without exceeding the weight W?) is NP-complete, thus there is no known algorithm both correct and fast (polynomial-time) on all cases.
+*
+*   While the decision problem is NP-complete, the optimization problem is NP-hard, its resolution is at least as difficult as the decision problem, and there is no known polynomial algorithm which can tell, given a solution, whether it is optimal (which would mean that there is no solution with a larger V, thus solving the NP-complete decision problem).
 *
 * Author: Lucas Saldyt (lucassaldyt@gmail.com)
 */ 
