@@ -33,13 +33,16 @@ def get_named_bits(output):
     return named_bits
 
 def interpret_output(output):
+    toReturn = []
+
     namedBits = get_named_bits(output)
     arrayName = None
     array     = []
     for name, bit in namedBits:
         if name.endswith('[0]'):
             if arrayName is not None:
-                print('%s : %s' % (arrayName, to_int(array)))
+                toReturn.append((arrayName, to_int(array)))
+                print('%s : %s' % toReturn[-1])
                 array = []
             arrayName = name[:-3]
             array.append(bit)
@@ -48,18 +51,25 @@ def interpret_output(output):
         else:
             arrayName = None
             array = []
+            toReturn.append((name, bit))
             print('%s : %s' % (name, bit))
+    return toReturn
+
+def to_output(filename):
+    run('yosys -q @.v scripts/synth.ys -b edif -o @.edif', filename)
+    run('edif2qmasm @.edif > @.qmasm', filename)
+    # Requires verilog modulename matches filename, bool output is named 'valid'
+    run('qmasm @.qmasm --format=qbsolv --pin="@.valid := true" -o @.qubo', filename)
+    output = run('qmasm-qbsolv -i @.qubo', filename, checkOut=True)
+    return output
 
 def main(args):
     filenames = sys.argv[1:]
     for filename in filenames:
         filename = os.path.splitext(filename)[0]
         try:
-            run('yosys -q @.v scripts/synth.ys -b edif -o @.edif', filename)
-            run('edif2qmasm @.edif > @.qmasm', filename)
-            # Requires verilog modulename matches filename, bool output is named 'valid'
-            run('qmasm @.qmasm --format=qbsolv --pin="@.valid := true" -o @.qubo', filename)
-            output = run('qmasm-qbsolv -i @.qubo', filename, checkOut=True)
+            output = to_output(filename)
+            print(output)
             interpret_output(output)
         finally:
             run('rm *.qmasm *.qubo *.edif')
