@@ -56,6 +56,7 @@ def interpret_output(output):
     return toReturn
 
 def to_output(filename):
+    run('verilator --lint-only @.v', filename)
     run('yosys -q @.v scripts/synth.ys -b edif -o @.edif', filename)
     run('edif2qmasm @.edif > @.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
