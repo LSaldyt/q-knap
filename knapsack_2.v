@@ -31,21 +31,21 @@ module knapsack_2 (A, B, C, D, E, valid);
     input A, B, C, D, E;
     output valid;
 
-    wire [63:0] min_value  = 15;
-    wire [63:0] max_weight = 16;
-    wire [63:0] total_value = 4  * A
-                       + 2  * B
-                       + 2  * C
-                       + 1  * D
-                       + 10 * E;
-    wire [63:0] total_weight = 12 * A  
-                        + 1  * B 
-                        + 2  * C 
-                        + 1  * D 
-                        + 4  * E;
+    wire [31:0] min_value  = 32'd15;
+    wire [31:0] max_weight = 32'd16;
+    wire [31:0] total_value = 32'd4  * A
+                            + 32'd2  * B
+                            + 32'd2  * C
+                            + 32'd1  * D
+                            + 32'd10 * E;
+    wire [31:0] total_weight = 32'd12 * A  
+                             + 32'd1  * B 
+                             + 32'd2  * C 
+                             + 32'd1  * D 
+                             + 32'd4  * E;
     wire [1:0] tests;
     assign tests[0] = total_value >= min_value;
-    assign tests[1] = total_weight <= max_value;
+    assign tests[1] = total_weight <= max_weight;
 
     assign valid = &tests;
 endmodule

@@ -44,14 +44,15 @@ def read_CSV_input(csvInput):
 # Convert "min" or "max" tags to the appropriate comparison operator
 toComparisonSymbol = lambda s : '>=' if s == 'min' else '<='
 
-def create_knapsack(rows, constraints, moduleName):
-    parameters = '\n    '.join(['wire [127:0] %s_%s = %s;' % c for c in constraints])
+def create_knapsack(rows, constraints, moduleName, wire_size=32):
+    wire = 'wire [%s:0]' % str(wire_size - 1)
+    parameters = '\n    '.join([wire + '%s_%s = 32\'d%s;' % c for c in constraints])
     names  = [t[0] for t in rows]
     inputs = ', '.join(names) 
     wireAssignments = []
     for i, c in enumerate(constraints):
-        constraintPairs = ['%s * %s' % (t[0], t[1][i]) for t in rows]
-        wireAssignments.append('wire [127:0] total_%s = \n        %s;\n' % (
+        constraintPairs = ['%s * 32\'d%s' % (t[0], t[1][i]) for t in rows]
+        wireAssignments.append(wire + ' total_%s = \n        %s;\n' % (
                 c[1],
                 '\n      + '.join(constraintPairs)))
     wireAssignments = '\n    '.join(wireAssignments)
