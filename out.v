@@ -24,5 +24,5 @@ module out (A, B, C, D, E, valid);
     wire weight_valid = total_weight <= max_weight;
 
     output valid;
-    assign valid = value_valid & weight_valid;
+    assign valid = value_valid && weight_valid;
 endmodule

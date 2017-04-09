@@ -43,9 +43,6 @@ module knapsack_2 (A, B, C, D, E, valid);
                              + 32'd2  * C 
                              + 32'd1  * D 
                              + 32'd4  * E;
-    wire [1:0] tests;
-    assign tests[0] = total_value >= min_value;
-    assign tests[1] = total_weight <= max_weight;
 
-    assign valid = &tests;
+    assign valid = total_value >= min_value && total_weight <= max_weight;
 endmodule

@@ -27,34 +27,28 @@
 * Author: Lucas Saldyt (lucassaldyt@gmail.com)
 */ 
 
-module knapsack #(
-    parameter max_weight = 16,
-    parameter min_value  = 15
-    )
+module knapsack
+    #(parameter max_weight = 16,
+      parameter min_value  = 15)
     (A, B, C, D, E, valid);
     input A, B, C, D, E;
+    output valid;
 
-    wire [5:0] total_weight;
-    wire [5:0] total_value;
+    //wire [5:0] max_weight = 16;
+    //wire [5:0] min_value  = 15;
 
     // If an item is chosen, add its weight and numeric value
-    assign total_weight = 12 * A  
+    wire [5:0] total_weight = 12 * A  
                         + 1  * B 
                         + 2  * C 
                         + 1  * D 
                         + 4  * E;
 
-    assign total_value = 4  * A
+    wire [5:0] total_value = 4  * A
                        + 2  * B
                        + 2  * C
                        + 1  * D
                        + 10 * E;
     
-    wire weight_valid;
-    assign weight_valid = total_weight <= max_weight;
-    wire value_valid;
-    assign value_valid = total_value > min_value;
-
-    output valid;
-    assign valid = weight_valid && value_valid;
+    assign valid = total_weight <= max_weight && total_value > min_value;
 endmodule

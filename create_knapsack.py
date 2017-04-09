@@ -60,7 +60,7 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
     validityAssignments = '\n    '.join(['wire %s_valid = total_%s %s %s_%s;'
         % (c[1], c[1], toComparisonSymbol(c[0]), c[0], c[1]) for c in constraints
         ])
-    outputAssignments = 'assign valid = %s;' % ' & '.join(['%s_valid' % c[1] for c in constraints])
+    outputAssignments = 'assign valid = %s;' % ' && '.join(['%s_valid' % c[1] for c in constraints])
     return knapsackOutline % (moduleName, 
                             inputs, 
                             inputs,
