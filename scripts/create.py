@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import shutil, sys, os
-from run import run, to_output, interpret_output
+from .run import runc, to_output, interpret_output
 
 knapsackOutline = """
 module %s (%s, valid);
@@ -69,8 +69,7 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
                             '', 
                             outputAssignments)
 
-def main():
-    args = sys.argv[1:]
+def create(args = sys.argv[1:]):
     assert len(args) == 1
     inputfile  = args[0]
     #outputfile = args[1]
@@ -94,8 +93,8 @@ def main():
             val += result[1] * row[1][i]
         print(val)
     print(constraints)
-    run('rm *.qmasm *.qubo *.edif')
+    runc('rm *.qmasm *.qubo *.edif')
     shutil.move(outputfile, 'output/scripts/' + outputfile)
 
 if __name__ == '__main__':
-    main()
+    create()

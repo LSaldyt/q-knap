@@ -8,10 +8,10 @@ def gen_image(scriptname, filename, fid='', view=True):
     #            'circuitimages/%s.png' % (basename + fid))
     #subprocess.call('xdg-open circuitimages/%s.png' % (basename + fid), shell=True)
 
-def main(files):
+def show(files):
     for filename in files:
         gen_image('show.ys', filename, view=True)
         #gen_image('optshow.ys', filename, '_opt', view=True)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    show(sys.argv[1:])

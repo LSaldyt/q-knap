@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import subprocess, sys, os
 
-def run(command, filename=None, checkOut=False):
+def runc(command, filename=None, checkOut=False):
     if filename is None:
         assert '@' not in command
         filename = ''
@@ -56,24 +56,23 @@ def interpret_output(output):
     return toReturn
 
 def to_output(filename):
-    run('verilator --lint-only -Wall @.v', filename)
-    run('yosys -q @.v scripts/synth.ys -b edif -o @.edif', filename)
-    run('edif2qmasm @.edif > @.qmasm', filename)
+    runc('verilator --lint-only -Wall @.v', filename)
+    runc('yosys -q @.v scripts/synth.ys -b edif -o @.edif', filename)
+    runc('edif2qmasm @.edif > @.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
-    run('qmasm @.qmasm --format=qbsolv --pin="@.valid := true" -o @.qubo', filename)
-    output = run('qmasm-qbsolv -i @.qubo', filename, checkOut=True)
+    runc('qmasm @.qmasm --format=qbsolv --pin="@.valid := true" -o @.qubo', filename)
+    output = runc('qmasm-qbsolv -i @.qubo', filename, checkOut=True)
     return output
 
-def main(args):
-    filenames = sys.argv[1:]
-    for filename in filenames:
+def run(args):
+    for filename in args:
         filename = os.path.splitext(filename)[0]
         try:
             output = to_output(filename)
             print(output)
             interpret_output(output)
         finally:
-            run('rm *.qmasm *.qubo *.edif')
+            runc('rm *.qmasm *.qubo *.edif')
 
 if __name__ == '__main__':
-    main(sys.argv)
+    run(sys.argv[1:])
