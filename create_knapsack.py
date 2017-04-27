@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-import sys, os
+import shutil, sys, os
 from run import run, to_output, interpret_output
 
 knapsackOutline = """
 module %s (%s, valid);
     input %s;
+    output valid;
 
     %s
 
@@ -12,7 +13,6 @@ module %s (%s, valid);
     
     %s
 
-    output valid;
     %s
 endmodule
 """
@@ -71,10 +71,11 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
 
 def main():
     args = sys.argv[1:]
-    assert len(args) == 2 
+    assert len(args) == 1
     inputfile  = args[0]
-    outputfile = args[1]
-    basename = os.path.splitext(outputfile)[0]
+    #outputfile = args[1]
+    basename = os.path.splitext(inputfile)[0]
+    outputfile = basename + '.v'
     with open(inputfile, 'r') as infile:
         csvInput = [line for line in infile]
     rows, constraints = read_CSV_input(csvInput)
@@ -94,6 +95,7 @@ def main():
         print(val)
     print(constraints)
     run('rm *.qmasm *.qubo *.edif')
+    shutil.move(outputfile, 'output/scripts/' + outputfile)
 
 if __name__ == '__main__':
     main()

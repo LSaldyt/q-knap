@@ -1,10 +1,10 @@
 
-module multi_knapsack (A, B, C, D, E, valid);
+module single (A, B, C, D, E, valid);
     input A, B, C, D, E;
+    output valid;
 
     wire [31:0]min_value = 32'd15;
     wire [31:0]max_weight = 32'd16;
-    wire [31:0]max_volume = 32'd10;
 
     wire [31:0] total_value = 
         A * 32'd4
@@ -20,16 +20,8 @@ module multi_knapsack (A, B, C, D, E, valid);
       + D * 32'd1
       + E * 32'd4;
 
-    wire [31:0] total_volume = 
-        A * 32'd1
-      + B * 32'd1
-      + C * 32'd1
-      + D * 32'd1
-      + E * 32'd1;
-
     
     
 
-    output valid;
-    assign valid = total_value >= min_value && total_weight <= max_weight && total_volume <= max_volume;
+    assign valid = total_value >= min_value && total_weight <= max_weight;
 endmodule

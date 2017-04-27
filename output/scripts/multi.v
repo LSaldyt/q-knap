@@ -1,9 +1,11 @@
 
-module out (A, B, C, D, E, valid);
+module multi (A, B, C, D, E, valid);
     input A, B, C, D, E;
+    output valid;
 
     wire [31:0]min_value = 32'd15;
     wire [31:0]max_weight = 32'd16;
+    wire [31:0]max_volume = 32'd10;
 
     wire [31:0] total_value = 
         A * 32'd4
@@ -19,10 +21,15 @@ module out (A, B, C, D, E, valid);
       + D * 32'd1
       + E * 32'd4;
 
-    
-    wire value_valid = total_value >= min_value;
-    wire weight_valid = total_weight <= max_weight;
+    wire [31:0] total_volume = 
+        A * 32'd1
+      + B * 32'd1
+      + C * 32'd1
+      + D * 32'd1
+      + E * 32'd1;
 
-    output valid;
-    assign valid = value_valid && weight_valid;
+    
+    
+
+    assign valid = total_value >= min_value && total_weight <= max_weight && total_volume <= max_volume;
 endmodule
