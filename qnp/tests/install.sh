@@ -5,14 +5,15 @@ cd ../../ # Home dir (quantum-np)
 git clone https://github.com/lanl/edif2qmasm.git
 cd edif2qmasm
 make
-make install
+sudo make install
 cd ..
 export QMASMPATH=/usr/local/share/edif2qmasm:$QMASMPATH
 
 # qmasm
 git clone https://github.com/lanl/qmasm
-python setup.py install
-
+cd qmasm
+sudo python setup.py install
+cd ..
 
 # verilator
 git clone http://git.veripool.org/git/verilator   # Only first time
