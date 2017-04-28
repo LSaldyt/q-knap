@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-import scripts
-#from scripts import create, show, run
-
+import qnp 
 import sys
 
-subscripts = {name : f for name, f in scripts.__dict__.items() if callable(f) }
+subscripts = {name : f for name, f in qnp.__dict__.items() if callable(f) }
 
 if __name__ == '__main__':
     args = sys.argv[1:]

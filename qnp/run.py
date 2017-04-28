@@ -70,9 +70,10 @@ def run(args):
         try:
             output = to_output(filename)
             print(output)
-            interpret_output(output)
+            result = interpret_output(output)
         finally:
             runc('rm *.qmasm *.qubo *.edif')
+    return result 
 
 if __name__ == '__main__':
     run(sys.argv[1:])

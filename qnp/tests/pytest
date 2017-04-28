@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import sys, os
+
+sys.path.insert(0, os.path.dirname(__file__) + '/../..')
+
+from qnp import run
+import unittest
+
+class TestQuantumNP(unittest.TestCase):
+
+    def test_knapsack(self):
+        result = run(['knapsack.v'])
+        self.assertEqual(result,
+                [('knapsack.A', 0), ('knapsack.B', 1), ('knapsack.C', 1), ('knapsack.D', 1), ('knapsack.E', 1), ('knapsack.valid', 1)])
+
+if __name__ == '__main__':
+    unittest.main()
+
+
