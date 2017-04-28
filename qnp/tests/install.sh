@@ -38,5 +38,5 @@ cd qbsolv_git/src
 make
 cd ../..
 cp qbsolv_git/src/qbsolv .
-rm -r qbsolv_git
+sudo rm -r qbsolv_git
 
