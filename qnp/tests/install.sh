@@ -28,9 +28,9 @@ sudo make install
 cd ..
 
 # yosys
-sudo add-apt-repository ppa:saltmakrell/ppa
+sudo add-apt-repository -y ppa:saltmakrell/ppa
 sudo apt-get update
-sudo apt-get install yosys
+sudo apt-get -y install yosys
 
 # qbsolv
 git clone https://github.com/dwavesystems/qbsolv qbsolv_git
