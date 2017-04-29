@@ -1,9 +1,0 @@
-language: python
-python:
-    - "3.6"
-    - "nightly"
-install: 
-    - "pip install -r requirements.txt"
-    - "./qnp/tests/install.sh"
-script: "qnp/tests/pytest"
-sudo: required
