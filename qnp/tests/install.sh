@@ -42,6 +42,7 @@ sudo apt-get install build-essential clang bison flex \
 
 git clone https://github.com/cliffordwolf/yosys.git
 cd yosys
+make config-gcc
 make
 sudo make install
 cd ..
