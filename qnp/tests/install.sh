@@ -2,6 +2,11 @@
 cd ../../ # Home dir (quantum-np)
 
 # edif2qmasm
+
+go get golang.org/x/tools/cmd/goimports
+go get golang.org/x/tools/cmd/stringer
+go get github.com/PuerkitoBio/pigeon
+
 git clone https://github.com/lanl/edif2qmasm.git
 cd edif2qmasm
 make
@@ -28,9 +33,11 @@ sudo make install
 cd ..
 
 # yosys
-sudo add-apt-repository -y ppa:saltmakrell/ppa
-sudo apt-get update
-sudo apt-get -y install yosys
+git clone https://github.com/cliffordwolf/yosys.git
+cd yosys
+make
+sudo make install
+cd ..
 
 # qbsolv
 git clone https://github.com/dwavesystems/qbsolv qbsolv_git
