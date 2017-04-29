@@ -39,4 +39,4 @@ make
 cd ../..
 cp qbsolv_git/src/qbsolv .
 
-export PATH=$PATH:.
+export PATH=$PATH:$PWD/.
