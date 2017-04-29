@@ -3,6 +3,8 @@ cd ../../ # Home dir (quantum-np)
 
 # edif2qmasm
 
+export GOPATH=$HOME/go
+
 go get golang.org/x/tools/cmd/goimports
 go get golang.org/x/tools/cmd/stringer
 go get github.com/PuerkitoBio/pigeon

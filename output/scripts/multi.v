@@ -5,7 +5,7 @@ module multi (A, B, C, D, E, valid);
 
     wire [31:0]min_value = 32'd15;
     wire [31:0]max_weight = 32'd16;
-    wire [31:0]max_volume = 32'd1000;
+    wire [31:0]max_volume = 32'd5;
 
     wire [31:0] total_value = 
         A * 32'd4
