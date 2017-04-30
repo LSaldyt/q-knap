@@ -26,12 +26,16 @@ def verify_set(args, s):
         comparison = lambda n : n <= value if m == 'max' else n >= value
         outcome = comparison(initial[i])
         print('{} {}'.format(name, 'is satisfied' if outcome else 'is not satisfied'))
+        outcomes.append(outcome)
+    if not all(outcomes):
+        print('Incorrect solution!')
 
 def verify(args):
     overview(args)
-    selections = create(args)
-    for s in selections:
-        verify_set(args, s)
-        print('')
+    s1 = create(args)[0]
+    verify_set(args, s1)
+    print('')
     s2 = solve(args)
     verify_set(args, s2)
+    print('')
+    print('Annealed solution {} a subset of classical solution!'.format('is' if s1 <= s2 else 'is not'))

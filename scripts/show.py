@@ -2,12 +2,12 @@
 import subprocess, shutil, sys, os
 
 def gen_image(scriptname, filename, fid='', view=True):
-    basename = os.path.splitext(filename)[0]
+    basename = os.path.splitext(os.path.basename(filename))[0]
     subprocess.call('yosys %s scripts/%s' % (filename, scriptname), shell=True)
     shutil.copy('/home/lucas/.yosys_show.png', 
-                'circuitimages/%s.png' % (basename + fid))
+                'output/circuitimages/%s.png' % (basename + fid))
     if view:
-        subprocess.call('xdg-open circuitimages/%s.png' % (basename + fid), shell=True)
+        subprocess.call('xdg-open output/circuitimages/%s.png' % (basename + fid), shell=True)
 
 def show(files):
     for filename in files:

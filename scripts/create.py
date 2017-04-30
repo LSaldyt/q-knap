@@ -14,9 +14,6 @@ module %s (%s, valid);
     %s
 
     %s
-    
-    %s
-
     %s
 endmodule
 """
@@ -33,7 +30,7 @@ Example csv file:
 toComparisonSymbol = lambda s : '>=' if s == 'min' else '<='
 
 def create_knapsack(rows, constraints, moduleName, wireSize=32):
-    wire = 'wire [%s:0]' % str(wireSize - 1)
+    wire = 'wire [%s:0] ' % str(wireSize - 1)
     parameters = '\n    '.join([wire + ('%s_%s = ' + str(wireSize) + '\'d%s;') % c for c in constraints])
     names  = [key for key in rows]
     inputs = ', '.join(names) 
@@ -54,7 +51,6 @@ def create_knapsack(rows, constraints, moduleName, wireSize=32):
                             inputs,
                             parameters, 
                             wireAssignments, 
-                            '', 
                             outputAssignments)
 
 # Return size (in bits) of the biggest integer calculable in an instance of the knapsack problem
