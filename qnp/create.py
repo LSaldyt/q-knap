@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import shutil, sys, os
+from math import log
+
 from .run import runc, to_output, interpret_output
 from .util import read_CSV, suppress_output
+
 
 knapsackOutline = """
 module %s (%s, valid);
@@ -29,14 +32,14 @@ Example csv file:
 # Convert "min" or "max" tags to the appropriate comparison operator
 toComparisonSymbol = lambda s : '>=' if s == 'min' else '<='
 
-def create_knapsack(rows, constraints, moduleName, wire_size=32):
-    wire = 'wire [%s:0]' % str(wire_size - 1)
-    parameters = '\n    '.join([wire + '%s_%s = 32\'d%s;' % c for c in constraints])
+def create_knapsack(rows, constraints, moduleName, wireSize=32):
+    wire = 'wire [%s:0]' % str(wireSize - 1)
+    parameters = '\n    '.join([wire + ('%s_%s = ' + str(wireSize) + '\'d%s;') % c for c in constraints])
     names  = [key for key in rows]
     inputs = ', '.join(names) 
     wireAssignments = []
     for i, c in enumerate(constraints):
-        constraintPairs = ['%s * 32\'d%s' % (k, v[i]) for k, v in rows.items()]
+        constraintPairs = [('%s * ' + str(wireSize) + '\'d%s') % (k, v[i]) for k, v in rows.items()]
         wireAssignments.append(wire + ' total_%s = \n        %s;\n' % (
                 c[1],
                 '\n      + '.join(constraintPairs)))
@@ -45,7 +48,7 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
     valid_checks = ['total_%s %s %s_%s'
         % (c[1], toComparisonSymbol(c[0]), c[0], c[1]) for c in constraints
         ]
-    outputAssignments = 'assign valid = %s;' % ' && '.join(valid_checks)#['%s_valid' % c[1] for c in constraints])
+    outputAssignments = 'assign valid = ((%s));' % ') && ('.join(valid_checks)#['%s_valid' % c[1] for c in constraints])
     return knapsackOutline % (moduleName, 
                             inputs, 
                             inputs,
@@ -53,6 +56,14 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
                             wireAssignments, 
                             '', 
                             outputAssignments)
+
+# Return size (in bits) of the biggest integer calculable in an instance of the knapsack problem
+def max_int(rows):
+    initial = [0 for _ in range(len(list(rows.values())[0]))]
+    for v in rows.values():
+        initial = [a + b for a, b in zip(initial, v)]
+    m = max(initial)
+    return m.bit_length()
 
 def create(args=sys.argv[1:]):
     assert(len(args) >= 1)
@@ -62,7 +73,8 @@ def create(args=sys.argv[1:]):
     outputfile = basename + '.v'
     with suppress_output():
         rows, constraints = read_CSV(args)
-        knapsack = create_knapsack(rows, constraints, basename)
+        wireSize = max_int(rows)
+        knapsack = create_knapsack(rows, constraints, basename, wireSize=wireSize)
         with open(outputfile, 'w') as outfile:
             outfile.write(knapsack)
         selections = []
