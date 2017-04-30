@@ -72,29 +72,25 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
 def create(args = sys.argv[1:]):
     assert len(args) == 1
     inputfile  = args[0]
-    #outputfile = args[1]
     basename = os.path.splitext(inputfile)[0]
     outputfile = basename + '.v'
     with open(inputfile, 'r') as infile:
         csvInput = [line for line in infile]
     rows, constraints = read_CSV_input(csvInput)
     knapsack = create_knapsack(rows, constraints, basename)
-    print(knapsack)
+    #print(knapsack)
     with open(outputfile, 'w') as outfile:
         outfile.write(knapsack)
-
     output = to_output(basename)
-    print(output)
+    #print(output)
     results = interpret_output(output)
-    for i, c in enumerate(constraints):
-        val = 0
-        print(c[1])
-        for result, row in zip(results, rows):
-            val += result[1] * row[1][i]
-        print(val)
-    print(constraints)
+    #print(results)
     runc('rm *.qmasm *.qubo *.edif')
     shutil.move(outputfile, 'output/scripts/' + outputfile)
+    results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+    selection = {item for item in results if item != 'valid'}
+    print(selection)
+    return selection
 
 if __name__ == '__main__':
     create()

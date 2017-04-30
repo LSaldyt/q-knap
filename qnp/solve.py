@@ -66,5 +66,10 @@ def solve(args):
     constraintVals = []
     for c in constraints[1:]:
         constraintVals.append(int(c[2]))
-    print(knapsack(items, *constraintVals))
+    results = knapsack(items, *constraintVals)[1]
+    selection = set()
+    for result in results:
+        selection.add([item for item in rows if item[1] == result][0][0])
+    print(selection)
+    return selection
 
