@@ -1,14 +1,10 @@
-from .create import read_CSV_input
+from .util import read_CSV
 #return rows, constraints
 
 def rank(args):
-    assert(len(args) == 1)
-    inputfile = args[0]
-    with open(inputfile, 'r') as infile:
-        csvInput = [line for line in infile]
-    rows, constraints = read_CSV_input(csvInput)
+    rows, constraints = read_CSV(args)
     scored = []
-    for label, values in rows:
+    for label, values in rows.items():
         score = 1
         for i, constraint in enumerate(constraints):
             if constraint[0] == 'max':

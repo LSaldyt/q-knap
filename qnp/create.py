@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import shutil, sys, os
 from .run import runc, to_output, interpret_output
+from .util import read_CSV
 
 knapsackOutline = """
 module %s (%s, valid);
@@ -25,33 +26,17 @@ Example csv file:
     ...
 """
 
-# Read rows and constraints from csvInput
-# rows is a list of the form [(A, [4, 12]), (B, [2, 1])]
-# constraints is a list of the form [('min', 'value', '15'), ('max', 'weight', '16')]
-def read_CSV_input(csvInput):
-    assert len(csvInput) > 1
-    rows = csvInput[1:]
-    # Seperate cells, remove whitespace, convert to integers and put into a tuple
-    rows = (row.split(',') for row in rows)
-    rows = ([cell.replace(' ', '') for cell in row] for row in rows)
-    rows = [(row[0], [int(cell) for cell in row[1:]]) for row in rows]  
-
-    labels      = csvInput[0].split(',')[1:] # Discard first column label
-    constraints = [tuple(label.split()) for label in labels] 
-
-    return rows, constraints
-
 # Convert "min" or "max" tags to the appropriate comparison operator
 toComparisonSymbol = lambda s : '>=' if s == 'min' else '<='
 
 def create_knapsack(rows, constraints, moduleName, wire_size=32):
     wire = 'wire [%s:0]' % str(wire_size - 1)
     parameters = '\n    '.join([wire + '%s_%s = 32\'d%s;' % c for c in constraints])
-    names  = [t[0] for t in rows]
+    names  = [key for key in rows]
     inputs = ', '.join(names) 
     wireAssignments = []
     for i, c in enumerate(constraints):
-        constraintPairs = ['%s * 32\'d%s' % (t[0], t[1][i]) for t in rows]
+        constraintPairs = ['%s * 32\'d%s' % (k, v[i]) for k, v in rows.items()]
         wireAssignments.append(wire + ' total_%s = \n        %s;\n' % (
                 c[1],
                 '\n      + '.join(constraintPairs)))
@@ -69,28 +54,28 @@ def create_knapsack(rows, constraints, moduleName, wire_size=32):
                             '', 
                             outputAssignments)
 
-def create(args = sys.argv[1:]):
-    assert len(args) == 1
-    inputfile  = args[0]
+def create(args=sys.argv[1:]):
+    assert(len(args) >= 1)
+    iterations = 1 if len(args) == 1 else int(args[1])
+    inputfile = args[0]
     basename = os.path.splitext(inputfile)[0]
     outputfile = basename + '.v'
-    with open(inputfile, 'r') as infile:
-        csvInput = [line for line in infile]
-    rows, constraints = read_CSV_input(csvInput)
+    rows, constraints = read_CSV(args)
     knapsack = create_knapsack(rows, constraints, basename)
-    #print(knapsack)
     with open(outputfile, 'w') as outfile:
         outfile.write(knapsack)
-    output = to_output(basename)
-    #print(output)
-    results = interpret_output(output)
-    #print(results)
-    runc('rm *.qmasm *.qubo *.edif')
+    selections = []
+    for _ in range(iterations):
+        output = to_output(basename)
+        results = interpret_output(output)
+        results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+        selection = {item for item in results if item != 'valid'}
+        print('Knapsack problem solved through simulated annealing:')
+        print(selection)
+        selections.append(selection)
     shutil.move(outputfile, 'output/scripts/' + outputfile)
-    results = [t[0].split('.')[-1] for t in results if t[1] == 1]
-    selection = {item for item in results if item != 'valid'}
-    print(selection)
-    return selection
+    runc('rm *.qmasm *.qubo *.edif')
+    return selections
 
 if __name__ == '__main__':
     create()

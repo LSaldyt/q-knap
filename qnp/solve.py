@@ -1,4 +1,4 @@
-from .create import read_CSV_input
+from .util import read_CSV
 
 import functools
 
@@ -52,24 +52,22 @@ def knapsack(items, *outerConstraints):
                     c - items[i - 1][n + 1] for n, c in enumerate(k)
                     ]
     result.reverse()
+
+    print('Knapsack problem solved classically with {} static evaluations:'.format(len(bestvalue.cache)))
     return bestvalue(len(items), *outerConstraints), result
 
 def solve(args):
-    assert(len(args) == 1)
-    inputfile = args[0]
-    with open(inputfile, 'r') as infile:
-        csvInput = [line for line in infile]
-    rows, constraints = read_CSV_input(csvInput)
+    rows, constraints = read_CSV(args)
     items = []
-    for row in rows:
-        items.append(row[1])
+    for k, v in rows.items():
+        items.append(v)
     constraintVals = []
     for c in constraints[1:]:
         constraintVals.append(int(c[2]))
-    results = knapsack(items, *constraintVals)[1]
+    score, results = knapsack(items, *constraintVals)
     selection = set()
     for result in results:
-        selection.add([item for item in rows if item[1] == result][0][0])
+        selection.add([k for k, v in rows.items() if v == result][0][0])
     print(selection)
     return selection
 
