@@ -12,7 +12,7 @@ def gen_image(scriptname, filename, fid='', view=True):
 def show(files):
     for filename in files:
         gen_image('show.ys', filename, view=True)
-        gen_image('optshow.ys', filename, '_opt', view=True)
+        #gen_image('optshow.ys', filename, '_opt', view=True)
 
 if __name__ == "__main__":
     show(sys.argv[1:])
