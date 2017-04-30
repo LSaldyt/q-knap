@@ -67,7 +67,7 @@ def solve(args):
     score, results = knapsack(items, *constraintVals)
     selection = set()
     for result in results:
-        selection.add([k for k, v in rows.items() if v == result][0][0])
+        selection.add([k for k, v in rows.items() if v == result][0])
     print(selection)
     return selection
 

@@ -5,7 +5,6 @@ from math import log
 from .run import runc, to_output, interpret_output
 from .util import read_CSV, suppress_output
 
-
 knapsackOutline = """
 module %s (%s, valid);
     input %s;
@@ -62,30 +61,33 @@ def max_int(rows):
     return m.bit_length()
 
 def create(args=sys.argv[1:]):
-    assert(len(args) >= 1)
-    iterations = 1 if len(args) == 1 else int(args[1])
-    inputfile = args[0]
-    basename = os.path.splitext(inputfile)[0]
-    outputfile = basename + '.v'
-    with suppress_output():
-        rows, constraints = read_CSV(args)
-        wireSize = max_int(rows)
-        knapsack = create_knapsack(rows, constraints, basename, wireSize=wireSize)
-        with open(outputfile, 'w') as outfile:
-            outfile.write(knapsack)
-        selections = []
-    for _ in range(iterations):
+    try:
+        assert(len(args) >= 1)
+        iterations = 1 if len(args) == 1 else int(args[1])
+        inputfile = args[0]
+        basename = os.path.splitext(inputfile)[0]
+        outputfile = basename + '.v'
         with suppress_output():
-            output  = to_output(basename)
-            results = interpret_output(output)
-            results = [t[0].split('.')[-1] for t in results if t[1] == 1]
-            selection = {item for item in results if item != 'valid'}
-        print('Knapsack problem solved through simulated annealing:')
-        print(selection)
-        selections.append(selection)
-    with suppress_output():
-        shutil.move(outputfile, 'output/scripts/' + outputfile)
-        runc('rm *.qmasm *.qubo *.edif')
+            rows, constraints = read_CSV(args)
+            wireSize = max_int(rows)
+            knapsack = create_knapsack(rows, constraints, basename, wireSize=wireSize)
+            with open(outputfile, 'w') as outfile:
+                outfile.write(knapsack)
+            selections = []
+        print('Created/wrote knapsack script')
+        for _ in range(iterations):
+            with suppress_output():
+                output  = to_output(basename)
+                results = interpret_output(output)
+                results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+                selection = {item for item in results if item != 'valid'}
+            print('Knapsack problem solved through simulated annealing:')
+            print(selection)
+            selections.append(selection)
+    finally:
+        with suppress_output():
+            shutil.move(outputfile, 'output/scripts/' + outputfile)
+            runc('rm *.qmasm *.qubo *.edif')
     return selections
 
 if __name__ == '__main__':
