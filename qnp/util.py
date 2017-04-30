@@ -1,5 +1,27 @@
-import os
 from collections import OrderedDict
+from contextlib import contextmanager
+
+import sys, os
+
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = sys.__stdout__
+
+@contextmanager
+def suppress_output():
+    with open(os.devnull, "w") as devnull:
+        sys.stdout = devnull
+        sys.stderr = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
 
 # Read rows and constraints from csvInput
 # rows is a list of the form [(A, [4, 12]), (B, [2, 1])]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import shutil, sys, os
 from .run import runc, to_output, interpret_output
-from .util import read_CSV
+from .util import read_CSV, suppress_output
 
 knapsackOutline = """
 module %s (%s, valid);
@@ -60,21 +60,24 @@ def create(args=sys.argv[1:]):
     inputfile = args[0]
     basename = os.path.splitext(inputfile)[0]
     outputfile = basename + '.v'
-    rows, constraints = read_CSV(args)
-    knapsack = create_knapsack(rows, constraints, basename)
-    with open(outputfile, 'w') as outfile:
-        outfile.write(knapsack)
-    selections = []
+    with suppress_output():
+        rows, constraints = read_CSV(args)
+        knapsack = create_knapsack(rows, constraints, basename)
+        with open(outputfile, 'w') as outfile:
+            outfile.write(knapsack)
+        selections = []
     for _ in range(iterations):
-        output = to_output(basename)
-        results = interpret_output(output)
-        results = [t[0].split('.')[-1] for t in results if t[1] == 1]
-        selection = {item for item in results if item != 'valid'}
+        with suppress_output():
+            output  = to_output(basename)
+            results = interpret_output(output)
+            results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+            selection = {item for item in results if item != 'valid'}
         print('Knapsack problem solved through simulated annealing:')
         print(selection)
         selections.append(selection)
-    shutil.move(outputfile, 'output/scripts/' + outputfile)
-    runc('rm *.qmasm *.qubo *.edif')
+    with suppress_output():
+        shutil.move(outputfile, 'output/scripts/' + outputfile)
+        runc('rm *.qmasm *.qubo *.edif')
     return selections
 
 if __name__ == '__main__':
