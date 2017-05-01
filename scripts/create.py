@@ -58,6 +58,10 @@ def max_int(rows):
     for v in rows.values():
         initial = [a + b for a, b in zip(initial, v)]
     m = max(initial)
+    print(rows)
+    print('MAX INT')
+    print(m)
+    print(m.bit_length())
     return m.bit_length()
 
 def create(args=sys.argv[1:]):
@@ -67,20 +71,19 @@ def create(args=sys.argv[1:]):
         inputfile = args[0]
         basename = os.path.splitext(inputfile)[0]
         outputfile = basename + '.v'
+        rows, constraints = read_CSV(args)
+        wireSize = max_int(rows)
         with suppress_output():
-            rows, constraints = read_CSV(args)
-            wireSize = max_int(rows)
             knapsack = create_knapsack(rows, constraints, basename, wireSize=wireSize)
             with open(outputfile, 'w') as outfile:
                 outfile.write(knapsack)
             selections = []
         print('Created/wrote knapsack script')
         for _ in range(iterations):
-            with suppress_output():
-                output  = to_output(basename)
-                results = interpret_output(output)
-                results = [t[0].split('.')[-1] for t in results if t[1] == 1]
-                selection = {item for item in results if item != 'valid'}
+            output  = to_output(basename)
+            results = interpret_output(output)
+            results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+            selection = {item for item in results if item != 'valid'}
             print('Knapsack problem solved through simulated annealing:')
             print(selection)
             selections.append(selection)

@@ -6,7 +6,7 @@ def runc(command, filename=None, checkOut=False):
         assert '@' not in command
         filename = ''
     command = command.replace('@', filename)
-    #print(command + ':')
+    print(command + ':')
     if checkOut:
         output = subprocess.check_output(command, shell=True)
         return output.decode('unicode_escape')
