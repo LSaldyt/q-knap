@@ -1,3 +1,6 @@
 qbsolv
 *.png
 __pycache__
+output/*.edif
+output/*.qmasm
+output/*.qubo

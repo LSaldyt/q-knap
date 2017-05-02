@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import subprocess, sys, os
+import subprocess, shutil, sys, os
+
+from .util import basename
 
 def runc(command, filename=None, checkOut=False):
     if filename is None:
@@ -8,7 +10,7 @@ def runc(command, filename=None, checkOut=False):
     command = command.replace('@', filename)
     print(command + ':')
     if checkOut:
-        output = subprocess.check_output(command, shell=True)
+        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
         return output.decode('unicode_escape')
     else:
         return subprocess.call(command, shell=True)
@@ -57,22 +59,22 @@ def interpret_output(output):
 
 def to_output(filename):
     runc('verilator --lint-only -Wall @.v', filename)
-    runc('yosys -q @.v scripts/synth.ys -b edif -o @.edif', filename)
-    runc('edif2qmasm @.edif > @.qmasm', filename)
+    runc('yosys -q @.v scripts/synth.ys -b edif -o output/@.edif', filename)
+    runc('edif2qmasm output/@.edif > output/@.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
-    runc('qmasm @.qmasm --format=qbsolv --pin="@.valid := true" -o @.qubo', filename)
-    output = runc('qmasm-qbsolv -i @.qubo', filename, checkOut=True)
+    runc('qmasm output/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/@.qubo', filename)
+    output = runc('qmasm-qbsolv -i output/@.qubo', filename, checkOut=True)
     return output
 
 def run(args):
     for filename in args:
-        filename = os.path.splitext(filename)[0]
+        bname = basename(filename)
+        shutil.copy(filename, bname + '.v')
         try:
-            output = to_output(filename)
-            print(output)
+            output = to_output(bname)
             result = interpret_output(output)
         finally:
-            runc('rm *.qmasm *.qubo *.edif')
+            runc('rm ' + bname + '.v')
     return result 
 
 if __name__ == '__main__':
