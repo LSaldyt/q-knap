@@ -40,11 +40,15 @@ def _read_CSV_input(csvInput):
 
     return itemDict, constraints
 
+def basename(path):
+    return os.path.splitext(os.path.basename(path))[0]
+
 def read_CSV(args):
     assert len(args) >= 1
     inputfile  = args[0]
-    basename = os.path.splitext(inputfile)[0]
-    outputfile = basename + '.v'
+    bname = basename(inputfile)
+    outputfile = bname + '.v'
     with open(inputfile, 'r') as infile:
         csvInput = [line for line in infile]
         return _read_CSV_input(csvInput)
+

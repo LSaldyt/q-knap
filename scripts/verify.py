@@ -32,7 +32,7 @@ def verify_set(args, s):
 
 def verify(args):
     overview(args)
-    s1 = create(args)[0]
+    s1 = create(args)
     verify_set(args, s1)
     print('')
     s2 = solve(args)
