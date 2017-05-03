@@ -28,6 +28,6 @@ def verify(args):
     verify_set(args, s1)
     print('')
     s2 = solve(args)
-    verify_set(args, s2)
+    #verify_set(args, s2)
     print('')
     print('Annealed solution {} a subset of classical solution!'.format('is' if s1 <= s2 else 'is not'))
