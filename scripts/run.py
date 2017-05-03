@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import subprocess, shutil, sys, os
+from collections import OrderedDict
 
 from .util import basename
 
@@ -38,24 +39,19 @@ def interpret_output(output):
     toReturn = []
 
     namedBits = get_named_bits(output)
-    arrayName = None
-    array     = []
+
+    d = OrderedDict()
     for name, bit in namedBits:
-        if name.endswith('[0]'):
-            if arrayName is not None:
-                toReturn.append((arrayName, to_int(array)))
-                print('%s : %s' % toReturn[-1])
-                array = []
-            arrayName = name[:-3]
-            array.append(bit)
-        elif name.endswith(']'):
-            array.append(bit)
+        if '[' in name:
+            prename, post = name.split('[', 1)
+            index         = int(post.split(']', 1)[0])
+            if prename in d:
+                d[prename] += (2 ** index * bit)
+            else:
+                d[prename] = (2 ** index * bit)
         else:
-            arrayName = None
-            array = []
-            toReturn.append((name, bit))
-            print('%s : %s' % (name, bit))
-    return toReturn
+            d[name] = bit
+    return list(d.items())
 
 def to_output(filename):
     runc('verilator --lint-only -Wall @.v', filename)

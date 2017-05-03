@@ -1,0 +1,9 @@
+GC,WC,QC,MC,EC
+GC,WC,,,
+WC,QC,,,
+QC,MC,,,
+MC,GC,,,
+EC,GC,,,
+EC,WC,,,
+EC,QC,,,
+EC,MC,,,
