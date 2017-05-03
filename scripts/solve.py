@@ -1,4 +1,4 @@
-from .util import read_CSV
+from .util import read_CSV, verify_set
 
 import functools
 
@@ -69,5 +69,6 @@ def solve(args):
     for result in results:
         selection.add([k for k, v in rows.items() if v == result][0])
     print(selection)
+    verify_set(args, selection)
     return selection
 

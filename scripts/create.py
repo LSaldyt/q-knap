@@ -3,7 +3,7 @@ import shutil, sys, os
 from math import log
 
 from .run import runc, to_output, interpret_output
-from .util import read_CSV, suppress_output, basename
+from .util import read_CSV, suppress_output, basename, verify_set
 
 knapsackOutline = """
 module %s (%s, valid);
@@ -80,11 +80,12 @@ def create(args=sys.argv[1:]):
         selection = {item for item in results if item != 'valid'}
         print('Knapsack problem solved through simulated annealing:')
         print(selection)
+        verify_set(args, selection)
         return selection
     finally:
         with suppress_output():
             shutil.move(outputfile, 'output/scripts/' + outputfile)
-            runc('rm *.qmasm *.qubo *.edif')
+            #runc('rm *.qmasm *.qubo *.edif')
 
 if __name__ == '__main__':
     create()

@@ -69,12 +69,14 @@ def to_output(filename):
 def run(args):
     for filename in args:
         bname = basename(filename)
-        shutil.copy(filename, bname + '.v')
+        if not os.path.exists(bname + '.v'):
+            shutil.copy(filename, bname + '.v')
         try:
             output = to_output(bname)
             result = interpret_output(output)
         finally:
-            runc('rm ' + bname + '.v')
+            pass
+            #runc('rm ' + bname + '.v')
     return result 
 
 if __name__ == '__main__':
