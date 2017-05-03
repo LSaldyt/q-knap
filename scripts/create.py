@@ -86,6 +86,7 @@ def creator(f):
                 outfile.write(verilog)
             output  = to_output(bname)
             results = interpret_output(output)
+            print(results)
             return results
         finally:
             with suppress_output():

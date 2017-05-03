@@ -59,7 +59,7 @@ def to_output(filename):
     runc('edif2qmasm output/@.edif > output/@.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
     runc('qmasm output/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/@.qubo', filename)
-    output = runc('qmasm-qbsolv -i output/@.qubo', filename, checkOut=True)
+    output = runc('qmasm-qbsolv -i output/@.qubo -n 8', filename, checkOut=True)
     return output
 
 def run(args):
