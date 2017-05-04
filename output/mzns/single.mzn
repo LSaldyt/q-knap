@@ -169,7 +169,7 @@ output [
   "Solution #1 (energy = ", show(energy), ", tally = 1)\n\n",
   "    Name(s)               Spin  Boolean\n",
   "    --------------------  ----  -------\n",
-  "    $wrnit                ", show_int(4, 2*q18 - 1), "  ", if show(q18) == "1" then "True" else "False" endif, "\n",
+  "    $qhsrv                ", show_int(4, 2*q18 - 1), "  ", if show(q18) == "1" then "True" else "False" endif, "\n",
   "    single.$id00004.A     ", show_int(4, 2*q0 - 1), "  ", if show(q0) == "1" then "True" else "False" endif, "\n",
   "    single.$id00004.B     ", show_int(4, 2*q1 - 1), "  ", if show(q1) == "1" then "True" else "False" endif, "\n",
   "    single.$id00004.Y     ", show_int(4, 2*q2 - 1), "  ", if show(q2) == "1" then "True" else "False" endif, "\n",

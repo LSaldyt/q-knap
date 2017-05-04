@@ -86,12 +86,15 @@ def creator(f):
                 outfile.write(verilog)
             a, b = to_output(bname)
             resulta = interpret_output(a)
+            resulta = [item for item in resulta if '$' not in item[0]]
             resultb = interpret_output(b)
             print('minizinc')
-            print([item for item in resulta if '$' not in item[0]])
+            print(resulta)
             print('qbsolv')
             print(resultb)
-            return resulta
+            if resulta != resultb:
+                print('{} (from minizinc) is not equal to {} (from qbsolv)'.format(resulta, resultb))
+            return resulta, resultb
         finally:
             with suppress_output():
                 shutil.move(outputfile, 'output/vs/' + outputfile)

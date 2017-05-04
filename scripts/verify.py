@@ -18,16 +18,17 @@ def overview(args):
 def to_set(results):
     results = [t[0].split('.')[-1] for t in results if t[1] == 1]
     selection = {item for item in results if item != 'valid'}
-    print('Knapsack problem solved through simulated annealing:')
     print(selection)
     return selection
 
 def verify(args):
     overview(args)
-    s1 = to_set(create_knapsack(args))
-    verify_set(args, s1)
+    s1a, s1b = create_knapsack(args)
+    print('minizinc (simulated annealing):')
+    s1a = to_set(s1a)
+    verify_set(args, s1a)
+    print('qbsolv (simulated annealing):')
+    s1b = to_set(s1b)
+    verify_set(args, s1b)
     print('')
     s2 = solve(args)
-    #verify_set(args, s2)
-    print('')
-    print('Annealed solution {} a subset of classical solution!'.format('is' if s1 <= s2 else 'is not'))
