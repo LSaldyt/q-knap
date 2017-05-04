@@ -5,7 +5,6 @@
 ###############################################################
 
 hierarchy -auto-top; proc; opt; fsm; opt; techmap; opt; 
-#abc -g AND,NAND,OR,NOR,XOR,XNOR,MUX,AOI3,OAI3,AOI4,OAI4;  
 abc -g AND,NAND,OR,NOR,XOR,XNOR,MUX,AOI3,OAI3,AOI4,OAI4;  
-#abc -g NAND;
 opt; clean
+write_verilog output/vs/__opt__.v

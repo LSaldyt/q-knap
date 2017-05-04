@@ -84,13 +84,17 @@ def creator(f):
             verilog = f(args)
             with open(outputfile, 'w') as outfile:
                 outfile.write(verilog)
-            output  = to_output(bname)
-            results = interpret_output(output)
-            print(results)
-            return results
+            a, b = to_output(bname)
+            resulta = interpret_output(a)
+            resultb = interpret_output(b)
+            print('minizinc')
+            print([item for item in resulta if '$' not in item[0]])
+            print('qbsolv')
+            print(resultb)
+            return resulta
         finally:
             with suppress_output():
-                shutil.move(outputfile, 'output/scripts/' + outputfile)
+                shutil.move(outputfile, 'output/vs/' + outputfile)
     return inner
 
 @creator

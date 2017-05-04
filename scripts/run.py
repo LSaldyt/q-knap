@@ -55,12 +55,15 @@ def interpret_output(output):
 
 def to_output(filename):
     runc('verilator --lint-only -Wall @.v', filename)
-    runc('yosys -q @.v scripts/synth.ys -b edif -o output/@.edif', filename)
-    runc('edif2qmasm output/@.edif > output/@.qmasm', filename)
+    runc('yosys -q @.v scripts/synth.ys -b edif -o output/edifs/@.edif', filename)
+    shutil.move('output/vs/__opt__.v', 'output/vs/opt_{}.v'.format(filename))
+    runc('edif2qmasm output/edifs/@.edif > output/qmasms/@.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
-    runc('qmasm output/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/@.qubo', filename)
-    output = runc('qmasm-qbsolv -i output/@.qubo -n 8', filename, checkOut=True)
-    return output
+    runc('qmasm output/qmasms/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/qubos/@.qubo', filename)
+    runc('qmasm output/qmasms/@.qmasm --format=minizinc --pin="@.valid := true" -o output/mzns/@.mzn', filename)
+    quboOut = runc('qmasm-qbsolv -i output/qubos/@.qubo -n 8', filename, checkOut=True)
+    zincOut = runc('minizinc -b mip output/mzns/@.mzn', filename, checkOut=True)
+    return zincOut, quboOut
 
 def run(args):
     for filename in args:
@@ -68,12 +71,12 @@ def run(args):
         if not os.path.exists(bname + '.v'):
             shutil.copy(filename, bname + '.v')
         try:
-            output = to_output(bname)
-            result = interpret_output(output)
+            a, b = to_output(bname)
+            resulta = interpret_output(a)
+            resultb = interpret_output(b)
         finally:
             pass
-            #runc('rm ' + bname + '.v')
-    return result 
+    return resulta
 
 if __name__ == '__main__':
     run(sys.argv[1:])
