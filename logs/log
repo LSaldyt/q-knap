@@ -29,6 +29,11 @@ May 3rd
 
 May 4th
 
+2.5h Read/skim several archiv papers (Quantum Search Algorithms, Nested quantum search and NP-hard problems, Faster than classical quantum algorithm for dense formulas of exact satisfiability and occupation problems, Quantum walk speedup of backtracking algorithms, IBM Qasm implementation)
+2h Notes on Grover's search algorithm, Quantum Oracle gate needed
+1h Add Minizinc to verification toolchain
+1h Implement ability to run (through simulation) qasm files (for future comparisons)
+
 May 5th 
 
 Week one journal
