@@ -37,6 +37,12 @@ May 4th
 
 May 5th 
 
+1h Write bool sat reduction/parser, test backtracking
+2h Create overview of knapsack problem scaling
+1h Read Sandia's report of DWave (https://arxiv.org/pdf/1604.00319.pdf), which focuses on problem scaling
+1h Review of Scott Aaronson's criticisms of DWave, and his correspondence with Catherine McGeoch
+2h Further investigation of Universal Gate Quantum Computing comparisons
+
 Week one journal
 
 May 8th

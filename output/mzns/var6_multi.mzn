@@ -2554,7 +2554,7 @@ output [
   "Solution #1 (energy = ", show(energy), ", tally = 1)\n\n",
   "    Name(s)                     Spin  Boolean\n",
   "    --------------------------  ----  -------\n",
-  "    $puady                      ", show_int(4, 2*q171 - 1), "  ", if show(q171) == "1" then "True" else "False" endif, "\n",
+  "    $xmpye                      ", show_int(4, 2*q171 - 1), "  ", if show(q171) == "1" then "True" else "False" endif, "\n",
   "    var6_multi.$id00012.A       ", show_int(4, 2*q0 - 1), "  ", if show(q0) == "1" then "True" else "False" endif, "\n",
   "    var6_multi.$id00012.B       ", show_int(4, 2*q1 - 1), "  ", if show(q1) == "1" then "True" else "False" endif, "\n",
   "    var6_multi.$id00012.Y       ", show_int(4, 2*q2 - 1), "  ", if show(q2) == "1" then "True" else "False" endif, "\n",

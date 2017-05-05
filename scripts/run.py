@@ -2,7 +2,7 @@
 import subprocess, shutil, sys, os
 from collections import OrderedDict
 
-from .util import basename
+from .util import basename, timedblock
 
 def runc(command, filename=None, checkOut=False):
     if filename is None:
@@ -61,8 +61,10 @@ def to_output(filename):
     # Requires verilog modulename matches filename, bool output is named 'valid'
     runc('qmasm output/qmasms/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/qubos/@.qubo', filename)
     runc('qmasm output/qmasms/@.qmasm --format=minizinc --pin="@.valid := true" -o output/mzns/@.mzn', filename)
-    quboOut = runc('qmasm-qbsolv -i output/qubos/@.qubo -n 8', filename, checkOut=True)
-    zincOut = runc('minizinc -b mip output/mzns/@.mzn', filename, checkOut=True)
+    with timedblock('qbsolv'):
+        quboOut = runc('qmasm-qbsolv -i output/qubos/@.qubo -n 8', filename, checkOut=True)
+    with timedblock('minizinc'):
+        zincOut = runc('minizinc -b mip output/mzns/@.mzn', filename, checkOut=True)
     return zincOut, quboOut
 
 def run(args):
