@@ -2,6 +2,7 @@ from collections import OrderedDict
 from contextlib import contextmanager
 
 import sys, os
+import time
 
 @contextmanager
 def suppress_stdout():
@@ -66,3 +67,13 @@ def verify_set(args, s):
         outcomes.append(outcome)
     if not all(outcomes):
         print('Incorrect solution!')
+
+@contextmanager
+def timedblock(label):
+    start = time.perf_counter()
+    try:
+        yield
+    finally:
+        end = time.perf_counter()
+        t   = end - start
+        print('{} : {}'.format(label, t))

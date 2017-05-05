@@ -33,6 +33,7 @@ May 4th
 2h Notes on Grover's search algorithm, Quantum Oracle gate needed
 1h Add Minizinc to verification toolchain
 1h Implement ability to run (through simulation) qasm files (for future comparisons)
+1h Additional research into: Backtracking, Grover's algorithm
 
 May 5th 
 

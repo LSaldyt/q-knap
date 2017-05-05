@@ -1,4 +1,4 @@
-from .util import read_CSV, verify_set
+from .util import read_CSV, verify_set, timedblock
 
 import functools
 
@@ -64,7 +64,8 @@ def solve(args):
     constraintVals = []
     for c in constraints[1:]:
         constraintVals.append(int(c[2]))
-    score, results = knapsack(items, *constraintVals)
+    with timedblock('Knapsack via dynamic programming:'):
+        score, results = knapsack(items, *constraintVals)
     selection = set()
     for result in results:
         selection.add([k for k, v in rows.items() if v == result][0])
