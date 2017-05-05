@@ -11,6 +11,6 @@ def read_verilog(args):
         name        = left.split()[1]
         for k, v in boolDict.items():
             right = right.replace(k, '({})'.format(v))
-        #print(name, right)
         boolDict[name] = right.replace(';', '').replace('\n', '')
-    print(boolDict['valid'])
+    #print(boolDict['valid'])
+    return boolDict['valid']
