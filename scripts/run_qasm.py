@@ -1,6 +1,10 @@
 from QuantumComputer import *
 
-#def run_qasm(filename, containing=None):
+def clean(line):
+    if '//' in line:
+        line, comment = line.split('//', 1)
+    return line
+
 def run_qasm(args):
     assert len(args) >= 1
     filename = args[0]
@@ -9,7 +13,9 @@ def run_qasm(args):
     else:
         containing = args[1:]
     with open(filename, 'r') as qasmfile:
-        code = qasmfile.read()
+        content = [clean(line) for line in qasmfile]
+    code = '\n'.join(content)
+    print(code)
     qc = QuantumComputer()
     qc.execute(code)
     for c in containing:

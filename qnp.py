@@ -8,8 +8,13 @@ if __name__ == '__main__':
     args = sys.argv[1:]
     assert len(args) >= 1
     subscript = args[0]
-    if subscript not in subscripts:
-        print('{} not in subscripts. Subscripts available are: {}'.format(
-            subscript, list(subscripts.keys())))
-    subscripts[subscript](args[1:])
+    showHelp  = subscript in ['-h', '--help']
+    unknown   = subscript not in subscripts
+    if showHelp or unknown:
+        print('Subscripts available are:\n    {}'.format(
+              '\n    '.join(list(subscripts.keys()))))
+        if not showHelp:
+            raise ValueError('Unknown subscript: "{}"'.format(subscript))
+    else:
+        subscripts[subscript](args[1:])
         
