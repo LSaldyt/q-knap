@@ -11,8 +11,12 @@ def runc(command, filename=None, checkOut=False):
     command = command.replace('@', filename)
     print(command + ':')
     if checkOut:
-        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-        return output.decode('unicode_escape')
+        try:
+            output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            return output.decode('unicode_escape')
+        except subprocess.CalledProcessError as e:
+            print(e.output)
+            raise
     else:
         return subprocess.call(command, shell=True)
 
@@ -59,12 +63,16 @@ def to_output(filename):
     shutil.move('output/vs/__opt__.v', 'output/vs/opt_{}.v'.format(filename))
     runc('edif2qmasm output/edifs/@.edif > output/qmasms/@.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
-    runc('qmasm output/qmasms/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/qubos/@.qubo', filename)
-    runc('qmasm output/qmasms/@.qmasm --format=minizinc --pin="@.valid := true" -o output/mzns/@.mzn', filename)
     with timedblock('qbsolv'):
-        quboOut = runc('qmasm-qbsolv -i output/qubos/@.qubo -n 8', filename, checkOut=True)
+        quboOut = runc('qmasm -O -v output/qmasms/@.qmasm --run' + 
+                       ' --format=qbsolv --pin="@.valid := true"', 
+                       filename,
+                       checkOut=True)
     with timedblock('minizinc'):
-        zincOut = runc('minizinc -b mip output/mzns/@.mzn', filename, checkOut=True)
+        zincOut = runc('qmasm -O -v output/qmasms/@.qmasm --run' + 
+                       ' --format=minizinc --pin="@.valid := true"', 
+                       filename,
+                       checkOut=True)
     return zincOut, quboOut
 
 def run(args):

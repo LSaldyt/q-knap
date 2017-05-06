@@ -4,25 +4,25 @@
 % Author:       Scott Pakin (pakin@lanl.gov)
 % Command line: /usr/local/bin/qmasm output/qmasms/var5_multi.qmasm --format=minizinc '--pin=var5_multi.valid := true' -o output/mzns/var5_multi.mzn
 
-var 0..1: q0;
-var 0..1: q1;
-var 0..1: q2;
-var 0..1: q3;
-var 0..1: q4;
-var 0..1: q5;
-var 0..1: q6;
-var 0..1: q7;
-var 0..1: q8;
-var 0..1: q9;
-var 0..1: q10;
-var 0..1: q11;
-var 0..1: q12;
-var 0..1: q13;
-var 0..1: q14;
-var 0..1: q15;
-var 0..1: q16;
-var 0..1: q17;
-var 0..1: q18;
+var 0..1: q0;  % var5_multi.$id00004.A
+var 0..1: q1;  % var5_multi.$id00004.B
+var 0..1: q2;  % var5_multi.$id00004.Y
+var 0..1: q3;  % var5_multi.$id00005.A
+var 0..1: q4;  % var5_multi.$id00005.B
+var 0..1: q5;  % var5_multi.$id00005.Y
+var 0..1: q6;  % var5_multi.$id00006.A
+var 0..1: q7;  % var5_multi.$id00006.B
+var 0..1: q8;  % var5_multi.$id00006.Y
+var 0..1: q9;  % var5_multi.$id00007.A
+var 0..1: q10;  % var5_multi.$id00007.B
+var 0..1: q11;  % var5_multi.$id00007.Y
+var 0..1: q12;  % var5_multi.valid
+var 0..1: q13;  % var5_multi.C
+var 0..1: q14;  % var5_multi.A
+var 0..1: q15;  % var5_multi.B
+var 0..1: q16;  % var5_multi.E
+var 0..1: q17;  % var5_multi.D
+var 0..1: q18;  % $jjfig
 
 % Define p_X_Y variables and constrain them to be the product of qX and qY.
 var 0..1: p_0_1;
@@ -171,7 +171,7 @@ output [
   "Solution #1 (energy = ", show(energy), ", tally = 1)\n\n",
   "    Name(s)                   Spin  Boolean\n",
   "    ------------------------  ----  -------\n",
-  "    $kpazc                    ", show_int(4, 2*q18 - 1), "  ", if show(q18) == "1" then "True" else "False" endif, "\n",
+  "    $jjfig                    ", show_int(4, 2*q18 - 1), "  ", if show(q18) == "1" then "True" else "False" endif, "\n",
   "    var5_multi.$id00004.A     ", show_int(4, 2*q0 - 1), "  ", if show(q0) == "1" then "True" else "False" endif, "\n",
   "    var5_multi.$id00004.B     ", show_int(4, 2*q1 - 1), "  ", if show(q1) == "1" then "True" else "False" endif, "\n",
   "    var5_multi.$id00004.Y     ", show_int(4, 2*q2 - 1), "  ", if show(q2) == "1" then "True" else "False" endif, "\n",
