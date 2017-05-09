@@ -1,6 +1,7 @@
 from .util import read_CSV, verify_set, timedblock
 
-from operator import itemgetter
+from functools import reduce
+from operator import itemgetter, mul
 
 import functools
 
@@ -54,28 +55,26 @@ def knapsack(items, outerConstraints):
     choices = [items.index(choice) for choice in result]
     return bestvalue(len(items), outerConstraints), result, choices
 
+
 def solve(args):
-    rows, constraints = read_CSV(args)
+    rows, constraintTuples = read_CSV(args)
     items = list(rows.values())
-    constraintVals = []
-    for c in constraints[1:]:
-        constraintVals.append(int(c[2]))
+    constraints = []
+    for c in constraintTuples[1:]:
+        constraints.append(int(c[2]))
+    keys = list(rows.keys())
+    def test_algo(algo, iterations=1, **kwargs):
+        with timedblock(algo.__name__):
+            for i in range(iterations):
+                _, _, choices = algo(items, constraints, **kwargs)
+        selection = {keys[i] for i in choices}
+        print(selection)
+        verify_set(args, selection)
+        return selection
 
-    def to_set(choices):
-        keys = list(rows.keys())
-        return [keys[i] for i in choices]
-
-    with timedblock('FPTAS'):
-        _, _, choices = fptas(items, constraintVals, e=.1)
-    selection = to_set(choices)
-    print(selection)
-    verify_set(args, selection)
-
-    with timedblock('Knapsack via dynamic programming:'):
-        _, _, choices = knapsack(items, constraintVals)
-    selection = to_set(choices)
-    print(selection)
-    verify_set(args, selection)
+    test_algo(fptas)
+    test_algo(greedy)
+    selection = test_algo(knapsack)
     return selection
 
 def fptas(items, capacities, e=0.1):
@@ -84,3 +83,9 @@ def fptas(items, capacities, e=0.1):
     items = [(v/k, *rest) for v, *rest in items]
     return knapsack(items, capacities)
 
+'''
+def greedy(items, capacities):
+    rank = lambda item : item[0] / max(1, (reduce(mul, item[1:], 1)))
+    sitems = sorted(items, key=rank)
+    print(sitems)
+'''
