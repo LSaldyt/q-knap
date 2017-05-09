@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
-import shutil, sys, os
+import shutil, sys, csv, os
 from math import log
+from functools import wraps
 
 from .run import runc, to_output, interpret_output
-from .util import read_CSV, suppress_output, basename
+from .util import read_CSV, suppress_output, basename, verify_set
 
-knapsackOutline = """
+verilogOutline = """
 module %s (%s, valid);
     input %s;
     output valid;
 
-    %s
-
-    %s
     %s
 endmodule
 """
@@ -28,7 +26,7 @@ Example csv file:
 # Convert "min" or "max" tags to the appropriate comparison operator
 toComparisonSymbol = lambda s : '>=' if s == 'min' else '<='
 
-def create_knapsack(rows, constraints, moduleName, wireSize=32):
+def generate_knapsack(rows, constraints, moduleName, wireSize=32):
     wire = 'wire [%s:0] ' % str(wireSize - 1)
     parameters = '\n    '.join([wire + ('%s_%s = ' + str(wireSize) + '\'d%s;') % c for c in constraints])
     names  = [key for key in rows]
@@ -45,12 +43,26 @@ def create_knapsack(rows, constraints, moduleName, wireSize=32):
         % (c[1], toComparisonSymbol(c[0]), c[0], c[1]) for c in constraints
         ]
     outputAssignments = 'assign valid = ((%s));' % ') && ('.join(valid_checks)#['%s_valid' % c[1] for c in constraints])
-    return knapsackOutline % (moduleName, 
+    return verilogOutline % (moduleName, 
                             inputs, 
                             inputs,
-                            parameters, 
-                            wireAssignments, 
+                            parameters + '\n' +
+                            wireAssignments + '\n' +
                             outputAssignments)
+
+def generate_map_color(headers, rows, name):
+    arglist     = ', '.join(headers)
+    bitsColor   = len(headers).bit_length()
+    bitsBorders = len(rows)
+    #argSize     = '[{}:0]'.format(bitsColor - 1)
+    argSize     = '[1:0]'
+    testSize    = '[{}:0]'.format(bitsBorders - 1)
+    argDecl     = argSize + arglist
+    tests       = 'wire {} tests;'.format(testSize)
+    for i, (a, b) in enumerate(rows):
+        tests += '\n    assign tests[{}] = {} != {};'.format(i, a, b)
+    tests += '\n    assign valid = &tests{};'.format(testSize)
+    return verilogOutline % (name, arglist, argDecl, tests)
 
 # Return size (in bits) of the biggest integer calculable in an instance of the knapsack problem
 def max_int(rows):
@@ -60,31 +72,50 @@ def max_int(rows):
     m = max(initial)
     return m.bit_length()
 
-def create(args=sys.argv[1:]):
-    try:
-        assert(len(args) >= 1)
-        inputfile = args[0]
-        bname = basename(inputfile)
-        outputfile = bname + '.v'
-        rows, constraints = read_CSV(args)
-        wireSize = max_int(rows) if len(args) == 1 else int(args[1])
-        print('Wire size selected as {}'.format(wireSize))
-        with suppress_output():
-            knapsack = create_knapsack(rows, constraints, bname, wireSize=wireSize)
+def creator(f):
+    @wraps(f)
+    def inner(args=sys.argv[1:]):
+        try:
+            assert(len(args) >= 1)
+            inputfile = args[0]
+            bname = basename(inputfile)
+            outputfile = bname + '.v'
+            #with suppress_output():
+            verilog = f(args)
             with open(outputfile, 'w') as outfile:
-                outfile.write(knapsack)
-        print('Created/wrote knapsack script')
-        output  = to_output(bname)
-        results = interpret_output(output)
-        results = [t[0].split('.')[-1] for t in results if t[1] == 1]
-        selection = {item for item in results if item != 'valid'}
-        print('Knapsack problem solved through simulated annealing:')
-        print(selection)
-        return selection
-    finally:
-        with suppress_output():
-            shutil.move(outputfile, 'output/scripts/' + outputfile)
-            runc('rm *.qmasm *.qubo *.edif')
+                outfile.write(verilog)
+            a, b = to_output(bname)
+            resulta = interpret_output(a)
+            resulta = [item for item in resulta if '$' not in item[0]]
+            resultb = interpret_output(b)
+            print('minizinc')
+            print(resulta)
+            print('qbsolv')
+            print(resultb)
+            if resulta != resultb:
+                print('{} (from minizinc) is not equal to {} (from qbsolv)'.format(resulta, resultb))
+            return resulta, resultb
+        finally:
+            with suppress_output():
+                shutil.move(outputfile, 'output/vs/' + outputfile)
+    return inner
 
-if __name__ == '__main__':
-    create()
+@creator
+def create_knapsack(args):
+    assert(len(args) >= 1)
+    inputfile = args[0]
+    bname = basename(inputfile)
+    rows, constraints = read_CSV(args)
+    wireSize = max_int(rows) if len(args) == 1 else int(args[1])
+    print('Wire size selected as {}'.format(wireSize))
+    return generate_knapsack(rows, constraints, bname, wireSize=wireSize)
+
+@creator
+def create_map_color(args):
+    assert(len(args) >= 1)
+    inputfile = args[0]
+    bname = basename(inputfile)
+    with open(inputfile, newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        data = [[item for item in row if item != ''] for row in spamreader]
+    return generate_map_color(data[0], data[1:], bname)

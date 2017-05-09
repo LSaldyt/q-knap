@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import subprocess, shutil, sys, os
+from collections import OrderedDict
 
-from .util import basename
+from .util import basename, timedblock
 
 def runc(command, filename=None, checkOut=False):
     if filename is None:
@@ -10,8 +11,12 @@ def runc(command, filename=None, checkOut=False):
     command = command.replace('@', filename)
     print(command + ':')
     if checkOut:
-        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-        return output.decode('unicode_escape')
+        try:
+            output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            return output.decode('unicode_escape')
+        except subprocess.CalledProcessError as e:
+            print(e.output)
+            raise
     else:
         return subprocess.call(command, shell=True)
 
@@ -38,44 +43,50 @@ def interpret_output(output):
     toReturn = []
 
     namedBits = get_named_bits(output)
-    arrayName = None
-    array     = []
+
+    d = OrderedDict()
     for name, bit in namedBits:
-        if name.endswith('[0]'):
-            if arrayName is not None:
-                toReturn.append((arrayName, to_int(array)))
-                print('%s : %s' % toReturn[-1])
-                array = []
-            arrayName = name[:-3]
-            array.append(bit)
-        elif name.endswith(']'):
-            array.append(bit)
+        if '[' in name:
+            prename, post = name.split('[', 1)
+            index         = int(post.split(']', 1)[0])
+            if prename in d:
+                d[prename] += (2 ** index * bit)
+            else:
+                d[prename] = (2 ** index * bit)
         else:
-            arrayName = None
-            array = []
-            toReturn.append((name, bit))
-            print('%s : %s' % (name, bit))
-    return toReturn
+            d[name] = bit
+    return list(d.items())
 
 def to_output(filename):
     runc('verilator --lint-only -Wall @.v', filename)
-    runc('yosys -q @.v scripts/synth.ys -b edif -o output/@.edif', filename)
-    runc('edif2qmasm output/@.edif > output/@.qmasm', filename)
+    runc('yosys -q @.v scripts/synth.ys -b edif -o output/edifs/@.edif', filename)
+    shutil.move('output/vs/__opt__.v', 'output/vs/opt_{}.v'.format(filename))
+    runc('edif2qmasm output/edifs/@.edif > output/qmasms/@.qmasm', filename)
     # Requires verilog modulename matches filename, bool output is named 'valid'
-    runc('qmasm output/@.qmasm --format=qbsolv --pin="@.valid := true" -o output/@.qubo', filename)
-    output = runc('qmasm-qbsolv -i output/@.qubo', filename, checkOut=True)
-    return output
+    with timedblock('qbsolv'):
+        quboOut = runc('qmasm -O -v output/qmasms/@.qmasm --run' + 
+                       ' --format=qbsolv --pin="@.valid := true"', 
+                       filename,
+                       checkOut=True)
+    with timedblock('minizinc'):
+        zincOut = runc('qmasm -O -v output/qmasms/@.qmasm --run' + 
+                       ' --format=minizinc --pin="@.valid := true"', 
+                       filename,
+                       checkOut=True)
+    return zincOut, quboOut
 
 def run(args):
     for filename in args:
         bname = basename(filename)
-        shutil.copy(filename, bname + '.v')
+        if not os.path.exists(bname + '.v'):
+            shutil.copy(filename, bname + '.v')
         try:
-            output = to_output(bname)
-            result = interpret_output(output)
+            a, b = to_output(bname)
+            resulta = interpret_output(a)
+            resultb = interpret_output(b)
         finally:
-            runc('rm ' + bname + '.v')
-    return result 
+            pass
+    return resulta
 
 if __name__ == '__main__':
     run(sys.argv[1:])

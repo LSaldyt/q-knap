@@ -1,30 +1,65 @@
 April 27th
 
-2h Implemented Classical (Dynamic Programming) solution
-1h Verified existing Verilog circuits, compared solutions to those classically generated
-1h Implemented addition Verilog circuits (Increasing in complexity)
-1h Added real-world example (Scrap metal prices)
-2h Printed/Read Three papers (QA Prolog, DWave qbsolv, Common quantum algorithms (Quantum Zoo))
+    2h Implemented Classical (Dynamic Programming) solution
+    1h Verified existing Verilog circuits, compared solutions to those classically generated
+    1h Implemented addition Verilog circuits (Increasing in complexity)
+    1h Added real-world example (Scrap metal prices)
+    2h Printed/Read Three papers (QA Prolog, DWave qbsolv, Common quantum algorithms (Quantum Zoo))
 
 May 1st
 
-1h Additional verifications of existing programs and data instances (bit width investigation)
-1h Meeting (e-mail correspondence) with Off-site mentor
-1h Requested three programs to be run on DWave (single constraint, multi constraint, real-world example (single constraint))
-2h Read/reviewed QA Prolog paper, Intro to Prolog slides, misc. web resources
-1h Experimentation with Prolog 
+    1h Additional verifications of existing programs and data instances (bit width investigation)
+    1h Meeting (e-mail correspondence) with Off-site mentor
+    1h Requested three programs to be run on DWave (single constraint, multi constraint, real-world example (single constraint))
+    2h Read/reviewed QA Prolog paper, Intro to Prolog slides, misc. web resources
+    1h Experimentation with Prolog 
 
 May 2nd
 
+    2h Review results of programs run on DWave
+    1h Fix issues with optimization/reduction script
+    1h Run basic examples with QA Prolog, revise code
+    2h Create and test several dual-constraint examples, submit to be run on the DWave
+
 May 3rd
+
+    3h Implement map coloring from csv file
+    1h Add US map coloring example
+    2h Work on prolog scripts
 
 May 4th
 
+    2.5h Read/skim several archiv papers (Quantum Search Algorithms, Nested quantum search and NP-hard problems, Faster than classical quantum algorithm for dense formulas of exact satisfiability and occupation problems, Quantum walk speedup of backtracking algorithms, IBM Qasm implementation)
+    2h Notes on Grover's search algorithm, Quantum Oracle gate needed
+    1h Add Minizinc to verification toolchain
+    1h Implement ability to run (through simulation) qasm files (for future comparisons)
+    1h Additional research into: Backtracking, Grover's algorithm
+
 May 5th 
+
+    1h Write bool sat reduction/parser, test backtracking
+    2h Create overview of knapsack problem scaling
+    1h Read Sandia's report of DWave (https://arxiv.org/pdf/1604.00319.pdf), which focuses on problem scaling
+    1h Review of Scott Aaronson's criticisms of DWave, and his correspondence with Catherine McGeoch
+    2h Further investigation of Universal Gate Quantum Computing comparisons
 
 Week one journal
 
+    Initially, I was very skeptical of the DWave, as it was surrounded by fluffy PR, and I had seen many articles questioning its true speed. 
+    The form of quantum computation I was familiar with, Universal Gate Computation, seemed to be more promising.
+    However, I have come to believe that studying the DWave (and quantum annealing in general) has genuine scientific value.
+    The main difference that I've noted is the programming interface for the DWave.
+    I'm able to express problems in Verilog (C-like) or even Prolog (High level logic language), which compares excellently to Universal Gate Computation, which uses qasm as a circuit description language.
+    For example, to run Grover's algorithm (using Universal Gate Computation) to solve the knapsack problem, I had to create a unitary matrix that would flip the phase of input qubits.
+    To run a knapsack problem on the DWave, I only needed to provide a list of constraints to be satisfied.
+    However, the DWave needs to provide a more rigorous demonstration that it outperforms alternate problem solving methods in some way.
+    (Alternatively, we need to develop a more solid programming interface for Universal Gate Computation. But doing this is outside of the scope of this project)
+
 May 8th
+
+1h Write Journal entry for first week
+1h Prepare for in-person meeting
+5h In person meeting and tour of Los Alamos Laboratories
 
 May 9th
 
