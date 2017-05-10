@@ -5,3 +5,6 @@ output/*.edif
 output/*.qmasm
 output/*.qubo
 *.zip
+*.pdf
+*.log
+*.aux

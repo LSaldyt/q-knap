@@ -1,0 +1,116 @@
+\documentclass{article}
+
+\usepackage{indentfirst}
+\usepackage{setspace}
+\doublespacing
+
+% ================================================================================= 
+% Package for showing source code
+% ================================================================================= 
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+language=C,
+aboveskip=.5mm,
+belowskip=.5mm,
+showstringspaces=false,
+columns=flexible,
+basicstyle={\scriptsize\ttfamily},
+numbers=none,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=false,
+breakatwhitespace=true,
+tabsize=3
+}
+
+% ================================================================================= 
+% Package for flowcharts/diagrams
+% ================================================================================= 
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io}        = [rectangle, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=blue!30]
+\tikzstyle{process}   = [diamond, minimum width=2cm, minimum height=0cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow}     = [thick,->,>=stealth]
+
+% ==================================================
+% Paper
+% ==================================================
+
+\title{DWave Interface for NP-complete problems}
+\date{05-10-2017}
+\author{Lucas Saldyt}
+
+\begin{document}
+
+\maketitle
+\pagenumbering{gobble}
+\newpage
+\pagenumbering{arabic}
+
+% ==================================================
+\section{Abstract}
+% ==================================================
+
+Programming a quantum annealer to solve certain kinds of NP-complete problems is actually much simpler than one would expect.
+Because of the rich software toolchains surrounding the DWave, it is easy to describe problems for the annealer to solve.
+This paper compares various implementations of the Knapsack problem (and lightly covers other NP-complete problems).
+
+% ==================================================
+\section{Introduction}
+% ==================================================
+
+...
+
+% ==================================================
+\section{Methods}
+% ==================================================
+
+\begin{verbatim}
+Classical solving:
+    Python:
+        Naive
+        Dynamic Programming
+        Polynomial Approximation
+
+Quantum/Simulated solving:
+    Verilog
+    Prolog
+    Grover's (qasm)
+
+csv problem instance input(s)
+\end{verbatim}
+
+% ==================================================
+\section{Discussion}
+% ==================================================
+
+Which interface is simplest? Easiest to use?
+Simple interface must be justified: If it isn't useful for solving problems, then the simplicity of the interface doesn't matter.
+Even if a simpler interface works for certain kinds of problems, be careful when making claims.
+
+Cite other benchmarks, don't do many.
+
+% ==================================================
+\section{Appendix}
+% ==================================================
+
+\begin{thebibliography}{9}
+    \bibitem{gps}
+        A. Newell, J. C. Shaw, H. A. Simon
+        \textit{Report on a general problem-solving program}
+        The Rand corporation, Santa Monica, California, 1958
+\end{thebibliography}
+
+\end{document}
