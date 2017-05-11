@@ -7,6 +7,12 @@ from itertools import combinations, chain
 import functools
 
 def memoize(obj):
+    '''
+    Decorator that caches function calls, allowing dynamic programming.
+    If a function is called twice with the same arguments, the cached result is used.
+
+    obj: function to be cached
+    '''
     cache = obj.cache = {}
     @functools.wraps(obj)
     def memoizer(*args, **kwargs):
@@ -20,18 +26,20 @@ def knapsack(items, outerConstraints):
     '''
     Solve the knapsack problem
 
-    `items` is a sequence of pairs `(value, weight, volume)`, where `value` is
-    a number and `weight` is a non-negative integer.
+    `items`: a sequence of pairs `(value, weight, volume)`, where `value` is
+      a number and `weight` is a non-negative integer.
 
+    `outerConstraints`: a list of numbers representing the maximum values 
+      for each respective constraint
 
-    Return a pair whose first element is the sum of values in the most
+    `return`: a pair whose first element is the sum of values in the most
     valuable subsequence, and whose second element is the subsequence.
     '''
 
     # Return the value of the most valuable subsequence of the first i
-    # elements in items whose weights sum to no more than j.
+    # elements in items whose constraints are satisfied
     @memoize
-    def bestvalue(i, constraints): # j is a constraint
+    def bestvalue(i, constraints):
         if i == 0: return 0
         value, *limiters = items[i - 1]
         tests = [l > v for l, v in zip(limiters, constraints)]

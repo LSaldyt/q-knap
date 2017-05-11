@@ -48,7 +48,7 @@ tabsize=3
 % Paper
 % ==================================================
 
-\title{DWave Interface for NP-complete problems}
+\title{Quantum Programming Interface for NP-complete problems}
 \date{05-10-2017}
 \author{Lucas Saldyt}
 
@@ -63,34 +63,184 @@ tabsize=3
 \section{Abstract}
 % ==================================================
 
-Programming a quantum annealer to solve certain kinds of NP-complete problems is actually much simpler than one would expect.
+Programming a quantum annealer to solve certain kinds of NP-complete problems is actually very simple.
 Because of the rich software toolchains surrounding the DWave, it is easy to describe problems for the annealer to solve.
-This paper compares various implementations of the Knapsack problem (and lightly covers other NP-complete problems).
+This paper compares various implementations of the Knapsack problem: Classically, using the DWave, and using the IBM Quantum Experience.
+Formal benchmarking is not a direct part of report. Formal benchmarks have been performed in [citations], and will be taken into account in the analysis of this paper.
+[Conclusion recap]
 
 % ==================================================
 \section{Introduction}
 % ==================================================
 
-...
+The Knapsack problem and other NP-complete problems have immediate real-world applications. 
+However, as the size of an NP-complete problem increases, it becomes very difficult to solve.
+Quantum Computation can allow NP-complete problems to be solved with a polynomial speedup.
+This paper explores different interfaces in the hope of improving the availability of quantum computation, and demonstrating the ease of use of existing interfaces.
+
+\newpage
 
 % ==================================================
 \section{Methods}
 % ==================================================
 
+% --------------------------------------------------
+\subsection{Classical Knapsack}
+% --------------------------------------------------
+
+Traditionally, the optimal way to solve the knapsack is through dynamic programming.
+However, the code necessary is potentially difficult to write from scratch:
+
+\lstset{language=Python}
+\begin{lstlisting}
+import functools
+
+def memoize(obj):
+    '''
+    Decorator that caches function calls, allowing dynamic programming.
+    If a function is called twice with the same arguments, the cached result is used.
+
+    obj: function to be cached
+    '''
+    cache = obj.cache = {}
+    @functools.wraps(obj)
+    def memoizer(*args, **kwargs):
+        key = str(args) + str(kwargs)
+        if key not in cache:
+            cache[key] = obj(*args, **kwargs)
+        return cache[key]
+    return memoizer
+
+def knapsack(items, outerConstraints):
+    '''
+    Solve the knapsack problem
+
+    `items`: a sequence of pairs `(value, weight, volume)`, where `value` is
+      a number and `weight` is a non-negative integer.
+
+    `outerConstraints`: a list of numbers representing the maximum values 
+      for each respective constraint
+
+    `return`: a pair whose first element is the sum of values in the most
+    valuable subsequence, and whose second element is the subsequence.
+    '''
+
+    # Return the value of the most valuable subsequence of the first i
+    # elements in items whose constraints are satisfied
+    @memoize
+    def bestvalue(i, constraints): # j is a constraint
+        if i == 0: return 0
+        value, *limiters = items[i - 1]
+        tests = [l > v for l, v in zip(limiters, constraints)]
+        if any(tests): # constraint checking
+            return bestvalue(i - 1, constraints)
+        else:          # maximizing
+            modifications = [v - l for l, v in zip(limiters, constraints)]
+            return max(bestvalue(i - 1, constraints),
+                       bestvalue(i - 1, modifications) + value)
+
+    # Create and modify a copy of
+    k = outerConstraints
+    result = []
+    for i in range(len(items), 0, -1):
+        if bestvalue(i, k) != bestvalue(i - 1, k):
+            result.append(items[i - 1])
+            k = [c - items[i - 1][n + 1] for n, c in enumerate(k)]
+    result.reverse()
+
+    print('Knapsack problem solved classically with {} static evaluations:'.format(len(bestvalue.cache)))
+    choices = [items.index(choice) for choice in result]
+\end{lstlisting}
+
+\newpage
+
+A simpler, naive implementation of the knapsack problem would try every combination of items, choosing the one with the best value that satisfied the constraints.
+
+\lstset{language=Python}
+\begin{lstlisting}
+def naive(items, capacities):
+    selection = []
+    bestval   = 0
+    for comb in powerset(items):
+        if len(comb) > 0:
+            setcaps = setvals(comb)
+            for j, capacity in enumerate(capacities):
+                if j == 0:
+                    if bestval > setcaps[0]:
+                        break
+                else:
+                    if setcaps[j] > capacity:
+                        break
+                if j == len(capacities) - 1: # All constraints satisfied for this set
+                    selection = comb
+    choices = [items.index(choice) for choice in selection]
+    return bestval, selection, choices
+\end{lstlisting}
+
+\newpage
+
+However, a fully polynomial approximation scheme is more accurately comparable to the problem being run on the DWave.
+A FPTAS simplifies the problem given, solving it to withing a margin of error.
+After simplification, FPTAS uses dynamic programming.
+For problems with few variables, the results of FPTAS are very similar to the results of dynamic programming, even if the margin of error is allowed to be high.
+
+\lstset{language=Python}
+\begin{lstlisting}
+def fptas(items, capacities, e=0.1):
+    maxvalue = max(items, key=itemgetter(0))[0]
+    k = e * (maxvalue / len(items))
+    items = [(v/k, *rest) for v, *rest in items]
+    return knapsack(items, capacities)
+\end{lstlisting}
+
+\newpage
+
+Below is output from all three classical solvers on an eight variable knapsack problem:
+
 \begin{verbatim}
-Classical solving:
-    Python:
-        Naive
-        Dynamic Programming
-        Polynomial Approximation
+fptas : 0.0007245789747685194
+{'G', 'B', 'D', 'H', 'E'}
+value is satisfied (70)
+weight is satisfied (60)
+volume is satisfied (55)
+________________________________________________________________________________
 
-Quantum/Simulated solving:
-    Verilog
-    Prolog
-    Grover's (qasm)
+naive : 0.0013742649462074041
+{'G', 'B', 'D', 'H', 'E'}
+value is satisfied (70)
+weight is satisfied (60)
+volume is satisfied (55)
+________________________________________________________________________________
 
-csv problem instance input(s)
+dynamic: 0.0006771821063011885
+{'G', 'B', 'D', 'H', 'E'}
+value is satisfied (70)
+weight is satisfied (60)
+volume is satisfied (55)
+________________________________________________________________________________
 \end{verbatim}
+
+Above 8 variables, the naive implementation times out or returns an incorrect answer.
+
+\newpage
+
+QMASM solving: Verilog and Prolog
+
+\lstset{language=Verilog}
+\begin{lstlisting}
+test
+\end{lstlisting}
+
+\lstset{language=Prolog}
+\begin{lstlisting}
+test
+\end{lstlisting}
+
+\newpage
+
+IBM Quantum experience
+
+
 
 % ==================================================
 \section{Discussion}
