@@ -89,9 +89,9 @@ May 11th
     1h Take notes and replicate Oracle matrix and Grover operator, create outline for building each on a system with more qubits.
     2h Read Nielsen and Chaung chapter on Quantum Search
     .5h Read Nielsen and Chaung chapter on reversible classical circuits
-    .2h Read "Quantum Search Algorithms" by Andris Ambainis
-    .2h Read "Classical and Quantum Algorithms for the Boolean Satisfiability Problem" by Carlos Barron-Romero
-    (pre)
+    .1h Read "Quantum Search Algorithms" by Andris Ambainis
+    .1h Read "Classical and Quantum Algorithms for the Boolean Satisfiability Problem" by Carlos Barron-Romero
+    .5h Review "A fast quantum mechanical algorithm for database search" by Lov K. Grover
     1h Additional work on interface paper draft
 
 May 12th
