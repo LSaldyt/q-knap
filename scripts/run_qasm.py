@@ -17,6 +17,7 @@ def run_qasm(args):
     code = '\n'.join(content)
     print(code)
     qc = QuantumComputer()
+    qc.reset()
     qc.execute(code)
     for c in containing:
         Probability.pretty_print_probabilities(qc.qubits.get_quantum_register_containing(c).get_state())
