@@ -57,29 +57,42 @@ Week one journal
 
 May 8th
 
-1h Write Journal entry for first week
-1h Prepare for in-person meeting
-5h In person meeting and tour of Los Alamos Laboratories
+    1h Write Journal entry for first week
+    1h Prepare for in-person meeting
+    1.5h Drive to Los Alamos
+    1h Meet other team members, discuss ongoing projects like Haskell SAPI bindings
+    1h Lunch with S. Pakin, discuss Senior Experience future directions and current progress
+    1.5h Drive back to Rio Rancho
 
 May 9th
 
-1h Test optimized knapsack, implement polynomial approximation
-1h Correspondence with on-campus supervisor
-1h Begin interface comparison paper
-2h Review papers for Grover's algorithm
-1h Test existing implementations of Grover's algorithm on simulated universal gate circuits
-1h Review "Exponential Complexity of the Quantum Adiabatic Algorithm for certain Satisfiability Problems"
+    1h Test optimized knapsack, implement polynomial approximation
+    1h Correspondence with on-campus supervisor
+    1h Begin interface comparison paper
+    2h Review papers for Grover's algorithm
+    1h Test existing implementations of Grover's algorithm on simulated universal gate circuits
+    1h Review "Exponential Complexity of the Quantum Adiabatic Algorithm for certain Satisfiability Problems"
 
 May 10th
 
-1h Implement greedy and greedy redux algorithms for comparison
-1h Finish outline for interface comparison paper
-(pre)
-1h First draft of interface comparison paper
-1h Further investigation of Grover's algorithm in general
-1h Closer look at IBM QE classical subroutines
+    1h Implement greedy and greedy redux algorithms for comparison
+    1h Finish outline for interface comparison paper
+    1h Work on draft of interface comparison paper
+    1h Print and read "Programming with the DWave" white paper.
+    1h Further investigation of Grover's algorithm in general
+    1h Closer look at IBM QE classical subroutines
+    1h Take notes (physical, paper) on the Oracle matrix in the two qubit example. 
 
 May 11th
+
+    .5h Run and verify two qubit version of Grover's algorithm
+    1h Take notes and replicate Oracle matrix and Grover operator, create outline for building each on a system with more qubits.
+    2h Read Nielsen and Chaung chapter on Quantum Search
+    .5h Read Nielsen and Chaung chapter on reversible classical circuits
+    .2h Read "Quantum Search Algorithms" by Andris Ambainis
+    .2h Read "Classical and Quantum Algorithms for the Boolean Satisfiability Problem" by Carlos Barron-Romero
+    (pre)
+    1h Additional work on interface paper draft
 
 May 12th
 
