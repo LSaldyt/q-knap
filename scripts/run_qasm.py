@@ -9,7 +9,7 @@ def run_qasm(args):
     assert len(args) >= 1
     filename = args[0]
     if len(args) == 1:
-        containing = ['q0']
+        containing = ['q0', 'q1', 'q2', 'q3', 'q4']
     else:
         containing = args[1:]
     with open(filename, 'r') as qasmfile:
