@@ -98,9 +98,20 @@ May 12th
 
     1h Work out instances of Grover's algorithm on paper
     1h Print and review: (CMU CS Lecture 4: Grover's Algorithm, CERN: The Quantum Query Complexity of 0-1 Knapsack)
-    (paper)
+    1h Investigate IBM Quantum Experience Python interface
+    .1h Correspondence with On-Campus mentor
+    3h Work on Final Paper and Reflective Essay
 
 Week two journal
+
+    As this project comes to a close, I feel that I've gained a layprogrammers perspective of running NP-Complete problems on different types of Quantum Computers.
+    Since I'm unaffiliated with either IBM, Los Alamos, or DWave, I've been able to approach the problem from a neutral perspective, and recognize both the flaws and benefits of each implementation.
+    In addition, I've grown close to the problem itself. I see instances of it in my daily life, and am continually impressed by how subtle it is.
+    For instance, while I was completing my senior experience I was simultaneously hunting craigslist for used cars.
+    I wanted to find a car with good mileage, high safety, enjoyable peripherals (like a stereo), and a low odometer reading, for the lowest price possible. 
+    Surprisingly, this is essentially an instance of the knapsack problem! At home, at school, and in business, the Knapsack problem shows up: What is the optimal subset of items in a collection?
+    I've also learned about research in general. Over the course of this project, I've read about twenty papers, not including the websites and online documentation I've worked through. Doing this project has shown me how to do research quickly and effectively, and summarize it without making costly innacuracies.
+    Everything that I've learned on this project will apply to my job, as well as to my life in general. This has been an excellent experience, and I plan on doing something similar in the future, even if my school does not require me to.
 
 May 15th
 
