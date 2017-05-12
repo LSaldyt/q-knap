@@ -5,7 +5,8 @@ module single (A, B, C, D, E, valid);
 
     wire [4:0] min_value = 5'd15;
     wire [4:0] max_weight = 5'd16;
-wire [4:0]  total_value = 
+
+    wire [4:0]  total_value = 
         A * 5'd4
       + B * 5'd2
       + C * 5'd2

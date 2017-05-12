@@ -46,7 +46,7 @@ def generate_knapsack(rows, constraints, moduleName, wireSize=32):
     return verilogOutline % (moduleName, 
                             inputs, 
                             inputs,
-                            parameters + '\n' +
+                            parameters + '\n\n    ' +
                             wireAssignments + '\n' +
                             outputAssignments)
 

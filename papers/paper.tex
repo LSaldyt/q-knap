@@ -2,35 +2,58 @@
 
 \usepackage{indentfirst}
 \usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{pgfplotstable}
 \doublespacing
 
 % ================================================================================= 
 % Package for showing source code
 % ================================================================================= 
 
-\usepackage{listings}
-\usepackage{color}
+ \usepackage{listings}
+  \usepackage{courier}
+ \lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         %numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+            frame=b,         
+ %        keywordstyle=[1]\textbf,    % Stil der Keywords
+ %        keywordstyle=[2]\textbf,    %
+ %        keywordstyle=[3]\textbf,    %
+ %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+         stringstyle=\color{blue}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+ }
+ \lstloadlanguages{% Check Dokumentation for further languages ...
+         %[Visual]Basic
+         %Pascal
+         %C
+         %C++
+         %XML
+         %HTML
+         %Java
+         Python
+ }
+    %\DeclareCaptionFont{blue}{\color{blue}} 
 
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-
-\lstset{frame=tb,
-language=C,
-aboveskip=.5mm,
-belowskip=.5mm,
-showstringspaces=false,
-columns=flexible,
-basicstyle={\scriptsize\ttfamily},
-numbers=none,
-numberstyle=\tiny\color{gray},
-keywordstyle=\color{blue},
-commentstyle=\color{dkgreen},
-stringstyle=\color{mauve},
-breaklines=false,
-breakatwhitespace=true,
-tabsize=3
-}
+  %\captionsetup[lstlisting]{singlelinecheck=false, labelfont={blue}, textfont={blue}}
+  \usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
 
 % ================================================================================= 
 % Package for flowcharts/diagrams
@@ -48,7 +71,7 @@ tabsize=3
 % Paper
 % ==================================================
 
-\title{Quantum Programming Interface for NP-complete problems}
+\title{Quantum Programming Interfaces for NP-complete problems}
 \date{05-10-2017}
 \author{Lucas Saldyt}
 
@@ -56,6 +79,8 @@ tabsize=3
 
 \maketitle
 \pagenumbering{gobble}
+\newpage
+\tableofcontents
 \newpage
 \pagenumbering{arabic}
 
@@ -85,117 +110,118 @@ This paper explores different interfaces in the hope of improving the availabili
 % ==================================================
 
 % --------------------------------------------------
-\subsection{Classical Knapsack}
+\subsection{Classical Knapsack Implementations}
 % --------------------------------------------------
 
+% .................................................. 
+\subsubsection{Naive Implementation}
+% .................................................. 
+
+The simplest interface for solving the knapsack problem is a naive python implementation that iterates through every combination of items, and returns the combination with the highest value that satisfies the problem's constraints.
+\lstset{language=Python}
+\lstinputlisting[label=samplecode,caption=Naive Knapsack]{../scripts/naive.py}
+However, the effectiveness of this implementation is limited, and only useful for showing how the code scales with different solvers.
+\newpage
+
+% .................................................. 
+\subsubsection{Dynamic Programming Implementation}
+% .................................................. 
+
 Traditionally, the optimal way to solve the knapsack is through dynamic programming.
-However, the code necessary is potentially difficult to write from scratch:
+However, the code necessary is more difficult to write from scratch:
 
 \lstset{language=Python}
-\begin{lstlisting}
-import functools
-
-def memoize(obj):
-    '''
-    Decorator that caches function calls, allowing dynamic programming.
-    If a function is called twice with the same arguments, the cached result is used.
-
-    obj: function to be cached
-    '''
-    cache = obj.cache = {}
-    @functools.wraps(obj)
-    def memoizer(*args, **kwargs):
-        key = str(args) + str(kwargs)
-        if key not in cache:
-            cache[key] = obj(*args, **kwargs)
-        return cache[key]
-    return memoizer
-
-def knapsack(items, outerConstraints):
-    '''
-    Solve the knapsack problem
-
-    `items`: a sequence of pairs `(value, weight, volume)`, where `value` is
-      a number and `weight` is a non-negative integer.
-
-    `outerConstraints`: a list of numbers representing the maximum values 
-      for each respective constraint
-
-    `return`: a pair whose first element is the sum of values in the most
-    valuable subsequence, and whose second element is the subsequence.
-    '''
-
-    # Return the value of the most valuable subsequence of the first i
-    # elements in items whose constraints are satisfied
-    @memoize
-    def bestvalue(i, constraints): # j is a constraint
-        if i == 0: return 0
-        value, *limiters = items[i - 1]
-        tests = [l > v for l, v in zip(limiters, constraints)]
-        if any(tests): # constraint checking
-            return bestvalue(i - 1, constraints)
-        else:          # maximizing
-            modifications = [v - l for l, v in zip(limiters, constraints)]
-            return max(bestvalue(i - 1, constraints),
-                       bestvalue(i - 1, modifications) + value)
-
-    # Create and modify a copy of
-    k = outerConstraints
-    result = []
-    for i in range(len(items), 0, -1):
-        if bestvalue(i, k) != bestvalue(i - 1, k):
-            result.append(items[i - 1])
-            k = [c - items[i - 1][n + 1] for n, c in enumerate(k)]
-    result.reverse()
-
-    print('Knapsack problem solved classically with {} static evaluations:'.format(len(bestvalue.cache)))
-    choices = [items.index(choice) for choice in result]
-\end{lstlisting}
-
+\lstinputlisting[label=samplecode,caption=Dynamic Programming]{../scripts/dynamic.py}
 \newpage
 
-A simpler, naive implementation of the knapsack problem would try every combination of items, choosing the one with the best value that satisfied the constraints.
-
-\lstset{language=Python}
-\begin{lstlisting}
-def naive(items, capacities):
-    selection = []
-    bestval   = 0
-    for comb in powerset(items):
-        if len(comb) > 0:
-            setcaps = setvals(comb)
-            for j, capacity in enumerate(capacities):
-                if j == 0:
-                    if bestval > setcaps[0]:
-                        break
-                else:
-                    if setcaps[j] > capacity:
-                        break
-                if j == len(capacities) - 1: # All constraints satisfied for this set
-                    selection = comb
-    choices = [items.index(choice) for choice in selection]
-    return bestval, selection, choices
-\end{lstlisting}
-
-\newpage
+% .................................................. 
+\subsubsection{Fully Polynomial Approximation Scheme Implementation}
+% .................................................. 
 
 However, a fully polynomial approximation scheme is more accurately comparable to the problem being run on the DWave.
-A FPTAS simplifies the problem given, solving it to withing a margin of error.
+A FPTAS simplifies the problem given, solving it to within a margin of error.
 After simplification, FPTAS uses dynamic programming.
 For problems with few variables, the results of FPTAS are very similar to the results of dynamic programming, even if the margin of error is allowed to be high.
+Notice that the fptas solver calls the dynamic programming solver (with a simpler version of the given problem). Even though its implementation appears to be short, it is actually much larger because it includes the dynamic programming code.
 
 \lstset{language=Python}
-\begin{lstlisting}
-def fptas(items, capacities, e=0.1):
-    maxvalue = max(items, key=itemgetter(0))[0]
-    k = e * (maxvalue / len(items))
-    items = [(v/k, *rest) for v, *rest in items]
-    return knapsack(items, capacities)
-\end{lstlisting}
-
+\lstinputlisting[label=samplecode,caption=Fully Polynomial Time Approximation Scheme]{../scripts/fptas.py}
 \newpage
 
-Below is output from all three classical solvers on an eight variable knapsack problem:
+% --------------------------------------------------
+\subsection{Quantum Knapsack Implementations}
+% --------------------------------------------------
+
+% .................................................. 
+\subsubsection{DWave Knapsack Implementations : Verilog}
+% .................................................. 
+
+While there are many ways of providing problems to the DWave quantum computer (Such as APIs for Python, C++, or Haskell, or an array of Domain Specific Languages), This paper investigates the highest-level implementations possible for the DWave.
+The first way to solve an NP-complete problem on the DWave is to provide a Verilog implementation of a circuit that checks if a solution is correct.
+This provides enough information to generate a Quantum Binary Optimization Problem, which the DWave can perform annealing on.
+Below are a few implementations of verilog circuits and their corresponding circuit images.
+
+\lstset{language=Verilog}
+\lstinputlisting[label=samplecode,caption=Single Constraint Knapsack Problem]{../output/vs/single.v}
+
+\newpage
+\begin{figure}
+  \includegraphics[width=\linewidth]{../output/circuitimages/single.png}
+  \caption{Single constraint circuit representation}
+  \label{fig:single}
+\end{figure}
+To simplify the construction of the Verilog file, one can use additional software:
+\begin{enumerate}
+    \item{QA-Prolog, a compiler from Prolog to Verilog (shown below)}
+    \item{QNP, which includes a script that generates Verilog from a csv file describing the knapsack problem}
+\end{enumerate}
+\newpage
+
+% .................................................. 
+\subsubsection{DWave Knapsack Implementations : Prolog}
+% .................................................. 
+
+Using the QA-Prolog software, Prolog can produce similar code to the Verilog shown above.
+The single constraint problem, written in Prolog:
+\lstset{language=Prolog}
+\lstinputlisting[label=samplecode,caption=Single Constraint Knapsack Problem]{../prolog/single.pl}
+
+% .................................................. 
+\subsubsection{DWave Knapsack Implementations : CSV}
+% .................................................. 
+
+A csv file, which also compiles to the Verilog shown previously:
+
+\pgfplotstabletypeset[
+    col sep=comma,
+    string type,
+    columns/name/.style={column name=Name, column type={|l}},
+    columns/surname/.style={column name=Surname, column type={|l}},
+    columns/age/.style={column name=Age, column type={|c|}},
+    every head row/.style={before row=\hline,after row=\hline},
+    every last row/.style={after row=\hline},
+    ]{../csvs/single.csv}
+\newpage
+
+% .................................................. 
+\subsubsection{Theoretical IBM Quantum Experience Knapsack Implementations}
+% .................................................. 
+
+Quantum Annealing is not the only alternate method of solving the knapsack problem.
+Instead, Universal Gate Quantum Computing offers a polynomial speedup based on Grover's search.
+
+However, the interface for using a Universal Gate Quantum Computer is much different than using a classical computer or the DWave.
+By comparison, the DWave interface may as well be classical, since, as this paper has showed, classical languages can be compiled to annealing problems runnable on the DWave.
+
+The language of Universal Gate Quantum computers is, redundantly, Quantum Gates, which are best expressed in qasm files.
+
+[Grover's Search, etc]
+
+% ==================================================
+\section{Results}
+% ==================================================
+
+Below is output from these three classical solvers on an eight variable knapsack problem:
 
 \begin{verbatim}
 fptas : 0.0007245789747685194
@@ -221,26 +247,6 @@ ________________________________________________________________________________
 \end{verbatim}
 
 Above 8 variables, the naive implementation times out or returns an incorrect answer.
-
-\newpage
-
-QMASM solving: Verilog and Prolog
-
-\lstset{language=Verilog}
-\begin{lstlisting}
-test
-\end{lstlisting}
-
-\lstset{language=Prolog}
-\begin{lstlisting}
-test
-\end{lstlisting}
-
-\newpage
-
-IBM Quantum experience
-
-
 
 % ==================================================
 \section{Discussion}
