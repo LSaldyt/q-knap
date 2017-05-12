@@ -8,3 +8,4 @@ output/*.qubo
 *.pdf
 *.log
 *.aux
+etc/IBMtoken

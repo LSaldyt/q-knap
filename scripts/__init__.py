@@ -7,3 +7,4 @@ from .verify         import verify
 from .run_qasm       import run_qasm
 from .read_verilog   import read_verilog
 from .bool_solve     import bool_solve
+from .quant_exp      import quant_exp
