@@ -86,7 +86,6 @@ def creator(f):
                 outfile.write(verilog)
             a, b = to_output(bname)
             resulta = interpret_output(a)
-            resulta = [item for item in resulta if '$' not in item[0]]
             resultb = interpret_output(b)
             print('minizinc')
             print(resulta)

@@ -1,6 +1,6 @@
 from .create import create_knapsack
 from .solve  import solve
-from .util   import read_CSV, verify_set
+from .util   import read_CSV, verify_set, to_set
 
 import os
 
@@ -14,12 +14,6 @@ def overview(args):
         comp = 'greater than or equal to' if m == 'min' else 'less than or equal to'
         print('{} is {} {}'.format(name, comp, value))
     print('')
-
-def to_set(results):
-    results = [t[0].split('.')[-1] for t in results if t[1] == 1]
-    selection = {item for item in results if item != 'valid'}
-    print(selection)
-    return selection
 
 def verify(args):
     overview(args)

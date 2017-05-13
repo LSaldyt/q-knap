@@ -54,6 +54,12 @@ def read_CSV(args):
         csvInput = [line for line in infile]
         return _read_CSV_input(csvInput)
 
+def to_set(results):
+    results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+    selection = {item for item in results if item != 'valid'}
+    print(selection)
+    return selection
+
 def verify_set(args, s):
     rows, constraints = read_CSV(args)
     initial = [0 for _ in range(len(list(rows.values())[0]))]

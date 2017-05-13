@@ -2,7 +2,7 @@
 import subprocess, shutil, sys, os
 from collections import OrderedDict
 
-from .util import basename, timedblock
+from .util import basename, timedblock, verify_set, to_set
 
 def runc(command, filename=None, checkOut=False):
     if filename is None:
@@ -40,8 +40,6 @@ def get_named_bits(output):
     return named_bits
 
 def interpret_output(output):
-    toReturn = []
-
     namedBits = get_named_bits(output)
 
     d = OrderedDict()
@@ -55,7 +53,9 @@ def interpret_output(output):
                 d[prename] = (2 ** index * bit)
         else:
             d[name] = bit
-    return list(d.items())
+    result = list(d.items())
+    comp = lambda item : '$' not in item[0] and item[0] != 'Name(s)'
+    return [item for item in result if comp(item)]
 
 def to_output(filename):
     runc('verilator --lint-only -Wall @.v', filename)
@@ -84,6 +84,8 @@ def run(args):
             a, b = to_output(bname)
             resulta = interpret_output(a)
             resultb = interpret_output(b)
+
+            print(to_set(resulta), to_set(resultb))
         finally:
             pass
     return resulta
