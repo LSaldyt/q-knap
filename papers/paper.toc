@@ -1,15 +1,15 @@
 \contentsline {section}{\numberline {1}Abstract}{1}
 \contentsline {section}{\numberline {2}Introduction}{1}
-\contentsline {section}{\numberline {3}Methods}{2}
-\contentsline {subsection}{\numberline {3.1}Classical Knapsack Implementations}{2}
-\contentsline {subsubsection}{\numberline {3.1.1}Naive Implementation}{2}
-\contentsline {subsubsection}{\numberline {3.1.2}Dynamic Programming Implementation}{4}
-\contentsline {subsubsection}{\numberline {3.1.3}Fully Polynomial Approximation Scheme Implementation}{7}
-\contentsline {subsection}{\numberline {3.2}Quantum Knapsack Implementations}{8}
-\contentsline {subsubsection}{\numberline {3.2.1}DWave Knapsack Implementations : Verilog}{8}
-\contentsline {subsubsection}{\numberline {3.2.2}DWave Knapsack Implementations : Prolog}{11}
-\contentsline {subsubsection}{\numberline {3.2.3}DWave Knapsack Implementations : CSV}{11}
-\contentsline {subsubsection}{\numberline {3.2.4}Theoretical IBM Quantum Experience Knapsack Implementations}{12}
-\contentsline {section}{\numberline {4}Results}{12}
-\contentsline {section}{\numberline {5}Discussion}{13}
-\contentsline {section}{\numberline {6}Appendix}{13}
+\contentsline {section}{\numberline {3}Methods}{3}
+\contentsline {subsection}{\numberline {3.1}Classical Knapsack Implementations}{3}
+\contentsline {subsubsection}{\numberline {3.1.1}Naive Implementation}{3}
+\contentsline {subsubsection}{\numberline {3.1.2}Dynamic Programming Implementation}{5}
+\contentsline {subsubsection}{\numberline {3.1.3}Fully Polynomial Approximation Scheme Implementation}{8}
+\contentsline {subsection}{\numberline {3.2}Quantum Knapsack Implementations}{9}
+\contentsline {subsubsection}{\numberline {3.2.1}DWave Knapsack Implementations : Verilog}{9}
+\contentsline {subsubsection}{\numberline {3.2.2}DWave Knapsack Implementations : Prolog}{13}
+\contentsline {subsubsection}{\numberline {3.2.3}DWave Knapsack Implementations : CSV}{13}
+\contentsline {subsubsection}{\numberline {3.2.4}Theoretical IBM Quantum Experience Knapsack Implementations}{14}
+\contentsline {section}{\numberline {4}Results}{15}
+\contentsline {section}{\numberline {5}Discussion}{16}
+\contentsline {section}{\numberline {6}Appendix}{16}

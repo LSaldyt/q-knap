@@ -88,11 +88,20 @@
 \section{Abstract}
 % ==================================================
 
+This report explores different programming interfaces for solving NP-complete problems.
+Different classical algorithms are compared to the interfaces for both the DWave quantum annealer and the IBM Quantum Experience Computer.
+This paper does not implement a direct benchmark between IBM and DWave.
+Instead, it describes the programming interface for each, and relies on other publications for benchmarks, which are hard to do correctly.
+
 Programming a quantum annealer to solve certain kinds of NP-complete problems is actually very simple.
 Because of the rich software toolchains surrounding the DWave, it is easy to describe problems for the annealer to solve.
-This paper compares various implementations of the Knapsack problem: Classically, using the DWave, and using the IBM Quantum Experience.
-Formal benchmarking is not a direct part of report. Formal benchmarks have been performed in [citations], and will be taken into account in the analysis of this paper.
-[Conclusion recap]
+However, DWave has limitations in the size of problems it can run and how quickly it can run them.
+So, DWave (and quantum annealing in general), despite having a useable interface, still needs many improvements before it will be useful on real problems.
+
+IBM does not allow the same level of abstraction as DWave, but has other benefits.
+If the interface for programming a Universal Gate Quantum Computer improves, IBM will be a strong option for solving NP-complete problems quickly.
+
+While Quantum Computation has proved useful on fabricated problems, there is still a long time before it has a true impact on real world problem solving.
 
 % ==================================================
 \section{Introduction}
@@ -102,7 +111,6 @@ The Knapsack problem and other NP-complete problems have immediate real-world ap
 However, as the size of an NP-complete problem increases, it becomes very difficult to solve.
 Quantum Computation can allow NP-complete problems to be solved with a polynomial speedup.
 This paper explores different interfaces in the hope of improving the availability of quantum computation, and demonstrating the ease of use of existing interfaces.
-
 \newpage
 
 % ==================================================
@@ -112,6 +120,9 @@ This paper explores different interfaces in the hope of improving the availabili
 % --------------------------------------------------
 \subsection{Classical Knapsack Implementations}
 % --------------------------------------------------
+
+Firstly, this paper shows three classical implementations of the Knapsack problem, each written in Python.
+The purpose of this is to make it clear how classical interfaces look compared to quantum interfaces.
 
 % .................................................. 
 \subsubsection{Naive Implementation}
@@ -152,29 +163,38 @@ Notice that the fptas solver calls the dynamic programming solver (with a simple
 \subsection{Quantum Knapsack Implementations}
 % --------------------------------------------------
 
+While there are many ways of providing problems to the DWave quantum computer (Such as APIs for Python, C++, or Haskell, or an array of Domain Specific Languages), This paper investigates the highest-level implementations possible for the DWave.
+
 % .................................................. 
 \subsubsection{DWave Knapsack Implementations : Verilog}
 % .................................................. 
 
-While there are many ways of providing problems to the DWave quantum computer (Such as APIs for Python, C++, or Haskell, or an array of Domain Specific Languages), This paper investigates the highest-level implementations possible for the DWave.
-The first way to solve an NP-complete problem on the DWave is to provide a Verilog implementation of a circuit that checks if a solution is correct.
+The first way to solve an NP-complete problem on the DWave is to provide a Verilog implementation of a classical "oracle" circuit that checks if a solution is correct.
 This provides enough information to generate a Quantum Binary Optimization Problem, which the DWave can perform annealing on.
-Below are a few implementations of verilog circuits and their corresponding circuit images.
+Below is a Verilog circuit, its corresponding image , and its corresponding image after problem reduction (to boolean satisfiability).
 
 \lstset{language=Verilog}
 \lstinputlisting[label=samplecode,caption=Single Constraint Knapsack Problem]{../output/vs/single.v}
 
 \newpage
-\begin{figure}
+\begin{figure}[h!]
   \includegraphics[width=\linewidth]{../output/circuitimages/single.png}
   \caption{Single constraint circuit representation}
   \label{fig:single}
 \end{figure}
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{../output/circuitimages/single_opt.png}
+  \caption{Optimized single constraint circuit representation}
+  \label{fig:opt_single}
+\end{figure}
+\newpage
+
 To simplify the construction of the Verilog file, one can use additional software:
 \begin{enumerate}
     \item{QA-Prolog, a compiler from Prolog to Verilog (shown below)}
     \item{QNP, which includes a script that generates Verilog from a csv file describing the knapsack problem}
 \end{enumerate}
+
 \newpage
 
 % .................................................. 
@@ -213,57 +233,123 @@ Instead, Universal Gate Quantum Computing offers a polynomial speedup based on G
 However, the interface for using a Universal Gate Quantum Computer is much different than using a classical computer or the DWave.
 By comparison, the DWave interface may as well be classical, since, as this paper has showed, classical languages can be compiled to annealing problems runnable on the DWave.
 
-The language of Universal Gate Quantum computers is, redundantly, Quantum Gates, which are best expressed in qasm files.
+The language of Universal Gate Quantum computers is Quantum Gates, which are expressed in qasm files.
+While a qasm file describing Grover's search is potentially short, it requires expert knowledge to write, as each line of code represents multiplying a vector of complex numbers by a matrix of complex numbers.
+Like with the DWave interface, the code will look different for each problem, as well as scaling with the problem itself.
+An advantage to the classical interface is that the code can stay the same even when the problem changes.       
 
-[Grover's Search, etc]
+\lstset{language=C}
+\lstinputlisting[label=samplecode,caption=Grover's search on a two-variable problem]{../qasms/grover_n2_a01.qasm}
 
 % ==================================================
 \section{Results}
 % ==================================================
 
-Below is output from these three classical solvers on an eight variable knapsack problem:
+A description of the five variable knapsack problem run below:
+\begin{verbatim}
+Given the following items:
+Name : [value, weight, volume]
+A    : [4,     28,      27]
+B    : [8,      8,      27]
+C    : [1,     27,       4]
+D    : [20,    18,       4]
+E    : [10,    27,       1]
+Choose a set, such that:
+value is greater than or equal to 30
+weight is less than or equal to 50
+volume is less than or equal to 50
+\end{verbatim}
+
+Below is output from these three classical solvers on a five variable knapsack problem:
 
 \begin{verbatim}
-fptas : 0.0007245789747685194
-{'G', 'B', 'D', 'H', 'E'}
-value is satisfied (70)
-weight is satisfied (60)
-volume is satisfied (55)
+fptas : 0.00019335599972691853
+{'D', 'E'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
 ________________________________________________________________________________
 
-naive : 0.0013742649462074041
-{'G', 'B', 'D', 'H', 'E'}
-value is satisfied (70)
-weight is satisfied (60)
-volume is satisfied (55)
+naive : 0.00013976199988974258
+{'D', 'E'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
 ________________________________________________________________________________
 
-dynamic: 0.0006771821063011885
-{'G', 'B', 'D', 'H', 'E'}
-value is satisfied (70)
-weight is satisfied (60)
-volume is satisfied (55)
+dynamic_knapsack : 0.00015341899961640593
+{'D', 'E'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
 ________________________________________________________________________________
 \end{verbatim}
 
-Above 8 variables, the naive implementation times out or returns an incorrect answer.
+DWave's annealing successfully solves the 5 variable knapsack problem as well:
+
+\begin{verbatim}
+Submitting the problem to the DW2X solver.
+
+[...]
+
+Timing information:
+
+    Measurement                    Value (us)
+    ------------------------------ ----------
+    total_real_time                    199315
+    anneal_time_per_run                    20
+    post_processing_overhead_time        4406
+    qpu_sampling_time                  181780
+    readout_time_per_run                  141
+    qpu_delay_time_per_sample              21
+    qpu_anneal_time_per_sample             20
+    total_post_processing_time           4406
+    qpu_programming_time                15160
+    run_time_chip                      181780
+    qpu_access_time                    199315
+    qpu_readout_time_per_sample           141
+
+Number of solutions found:
+
+        75 total
+        33 with no broken chains or broken pins
+         1 at minimal energy
+         1 excluding duplicate variable assignments
+
+Solution #1 (energy = -26.00, tally = 56):
+
+    Name                Spin  Boolean
+    ------------------  ----  --------
+    harder_multi.A        -1  False  
+    harder_multi.B        -1  False  
+    harder_multi.C        -1  False  
+    harder_multi.D        +1  True   
+    harder_multi.E        +1  True   
+    harder_multi.valid    +1  True    
+
+{'D', 'E'}
+\end{verbatim}
+
+This report does not include a five variable problem being run on IBM's topology.
 
 % ==================================================
 \section{Discussion}
 % ==================================================
 
-Which interface is simplest? Easiest to use?
-Simple interface must be justified: If it isn't useful for solving problems, then the simplicity of the interface doesn't matter.
-Even if a simpler interface works for certain kinds of problems, be careful when making claims.
+Quantum Computers currently do not help solve non trivial real world problems in an advantageous way.
 
-Cite other benchmarks, don't do many.
+DWave has superior interface, but has more hardware improvements to make.
+
+Both IBM and DWave need hardware improvements, but DWave needs more.
+
+IBM Interface is only usable for specialists, not layprogrammers
 
 % ==================================================
 \section{Appendix}
 % ==================================================
 
 \begin{thebibliography}{9}
-    \bibitem{gps}
+    \bibitem{problem-solving-paper}
         A. Newell, J. C. Shaw, H. A. Simon
         \textit{Report on a general problem-solving program}
         The Rand corporation, Santa Monica, California, 1958
