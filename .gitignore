@@ -4,6 +4,7 @@ __pycache__
 output/*.edif
 output/*.qmasm
 output/*.qubo
+output/*/*
 *.zip
 *.pdf
 *.log
