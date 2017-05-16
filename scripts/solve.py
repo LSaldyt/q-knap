@@ -2,8 +2,8 @@ from .util    import read_CSV, verify_set, timedblock, timeout
 from .naive   import naive
 from .dynamic import dynamic_knapsack
 from .fptas   import fptas
+from .greedy  import greedy
 
-from functools import reduce
 from itertools import combinations, chain
 
 '''
@@ -40,29 +40,7 @@ def solve(args):
         return selection
 
     test_algo(fptas, e=.1)
-    #test_algo(greedy)
+    test_algo(greedy)
     #test_algo(naive)
     selection = test_algo(dynamic_knapsack)
     return selection
-
-
-'''
-def greedy(items, capacities):
-    rank   = lambda item : item[0] / max(1, (reduce(mul, item[1:], 1)))
-    sitems = sorted(items, key=rank)
-
-    selection = []
-    bestval = 0
-    setcaps = (0,) * len(capacities)
-    for i, item in enumerate(sitems):
-        setcaps = tuple(a + b for a, b in zip(setcaps, item))
-        for j, capacity in enumerate(capacities):
-            if j != 0:
-                if setcaps[j] > capacity:
-
-                    break
-        print(setcaps)
-        
-    choices = [items.index(choice) for choice in selection]
-    return bestval, selection, choices
-'''
