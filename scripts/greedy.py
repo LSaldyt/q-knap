@@ -2,6 +2,10 @@ from operator  import mul
 from functools import reduce
 
 def greedy(items, capacities):
+    '''
+    Currently undefined on problems with more than two constraints
+    (ie a problem with value, weight, and volume)
+    '''
     rank   = lambda item : item[0] / max(1, (reduce(mul, item[1:], 1)))
     sitems = sorted(items, key=rank, reverse=True)
 
