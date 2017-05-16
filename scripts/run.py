@@ -68,11 +68,14 @@ def to_output(filename):
                        ' --format=qbsolv --pin="@.valid := true"', 
                        filename,
                        checkOut=True)
+    '''
     with timedblock('minizinc'):
         zincOut = runc('qmasm -O -v output/qmasms/@.qmasm --run' + 
                        ' --format=minizinc --pin="@.valid := true"', 
                        filename,
                        checkOut=True)
+    '''
+    zincOut = ''
     return zincOut, quboOut
 
 def run(args):
@@ -82,13 +85,13 @@ def run(args):
             shutil.copy(filename, bname + '.v')
         try:
             a, b = to_output(bname)
-            resulta = interpret_output(a)
+            #resulta = interpret_output(a)
             resultb = interpret_output(b)
 
-            print(to_set(resulta), to_set(resultb))
+            #print(to_set(resulta), to_set(resultb))
         finally:
             pass
-    return resulta
+    return resultb
 
 if __name__ == '__main__':
     run(sys.argv[1:])

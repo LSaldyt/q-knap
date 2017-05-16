@@ -80,17 +80,17 @@
             (viewRef VIEW_NETLIST (cellRef id00003 (libraryRef LIB))))
           (instance (rename id00007 "$abc$555$auto$blifparse.cc:286:parse_blif$559")
             (viewRef VIEW_NETLIST (cellRef id00001 (libraryRef LIB))))
-          (net (rename id00008 "$abc$555$n7") (joined
-            (portRef B (instanceRef id00007))
-            (portRef Y (instanceRef id00004))
-          ))
-          (net (rename id00009 "$abc$555$n9") (joined
+          (net (rename id00008 "$abc$555$n9") (joined
             (portRef A (instanceRef id00007))
             (portRef Y (instanceRef id00006))
           ))
-          (net (rename id00010 "$abc$555$n8") (joined
+          (net (rename id00009 "$abc$555$n8") (joined
             (portRef A (instanceRef id00006))
             (portRef Y (instanceRef id00005))
+          ))
+          (net (rename id00010 "$abc$555$n7") (joined
+            (portRef B (instanceRef id00007))
+            (portRef Y (instanceRef id00004))
           ))
           (net valid (joined
             (portRef Y (instanceRef id00007))
