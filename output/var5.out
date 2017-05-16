@@ -1,0 +1,25 @@
+lucas@qed:~/projects/lanl/qnp$ ./qnp solve csvs/var5_multi.csv 1000000
+['csvs/var5_multi.csv', '1000000']
+fptas : 120.80939865000255
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
+________________________________________________________________________________
+
+naive : 107.68942248700478
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
+________________________________________________________________________________
+
+dynamic_knapsack : 114.03447730200423
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
+________________________________________________________________________________

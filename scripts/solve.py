@@ -23,7 +23,7 @@ def solve(args):
     for c in constraintTuples[1:]:
         constraints.append(int(c[2]))
     keys = list(rows.keys())
-    def test_algo(algo, iterations=iterations, maxTime=1, **kwargs):
+    def test_algo(algo, iterations=iterations, maxTime=1000, **kwargs):
         selection = set()
         try:
             with timeout(maxTime):
@@ -40,7 +40,7 @@ def solve(args):
         return selection
 
     test_algo(fptas, e=.1)
-    test_algo(greedy)
+    #test_algo(greedy)
     test_algo(naive)
     selection = test_algo(dynamic_knapsack)
     return selection
