@@ -23,7 +23,7 @@ def solve(args):
     for c in constraintTuples[1:]:
         constraints.append(int(c[2]))
     keys = list(rows.keys())
-    def test_algo(algo, iterations=iterations, maxTime=3, **kwargs):
+    def test_algo(algo, iterations=iterations, maxTime=1, **kwargs):
         selection = set()
         try:
             with timeout(maxTime):
