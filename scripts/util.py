@@ -25,6 +25,14 @@ def suppress_output():
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
 
+def get_iterations(args):
+    if len(args) > 1:
+        i = int(args[1])
+        assert(i > 0)
+        return i
+    else:
+        return 1
+
 # Read rows and constraints from csvInput
 # rows is a list of the form [(A, [4, 12]), (B, [2, 1])]
 # constraints is a list of the form [('min', 'value', '15'), ('max', 'weight', '16')]

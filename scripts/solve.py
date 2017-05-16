@@ -1,4 +1,4 @@
-from .util    import read_CSV, verify_set, timedblock, timeout
+from .util    import read_CSV, verify_set, timedblock, timeout, get_iterations
 from .naive   import naive
 from .dynamic import dynamic_knapsack
 from .fptas   import fptas
@@ -12,18 +12,14 @@ https://www.cs.cmu.edu/afs/cs/academic/class/15854-f05/www/scribe/lec10.pdf
 '''
 
 def solve(args):
-    if len(args) > 1:
-        iterations = int(args[1])
-        args = args[:1]
-    else:
-        iterations = 1
+    iterations = get_iterations(args)
     rows, constraintTuples = read_CSV(args)
     items = [tuple(item) for item in rows.values()]
     constraints = []
     for c in constraintTuples[1:]:
         constraints.append(int(c[2]))
     keys = list(rows.keys())
-    def test_algo(algo, iterations=iterations, maxTime=1000, **kwargs):
+    def test_algo(algo, iterations=iterations, maxTime=1, **kwargs):
         selection = set()
         try:
             with timeout(maxTime):
@@ -40,7 +36,8 @@ def solve(args):
         return selection
 
     test_algo(fptas, e=.1)
-    #test_algo(greedy)
+    if len(constraints) == 1:
+        test_algo(greedy)
     test_algo(naive)
     selection = test_algo(dynamic_knapsack)
     return selection
