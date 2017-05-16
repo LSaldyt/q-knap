@@ -18,14 +18,11 @@ def naive(items, capacities):
     for comb in powerset(items):
         if len(comb) > 0:
             setcaps = setvals(comb)
-            for j, capacity in enumerate(capacities):
-                if j == 0:
-                    if bestval > setcaps[0]:
+            if bestval < setcaps[0]:
+                for j, capacity in enumerate(capacities):
+                    if setcaps[j + 1] > capacity:
                         break
-                else:
-                    if setcaps[j] > capacity:
-                        break
-                if j == len(capacities) - 1: # All constraints satisfied for this set
-                    selection = comb
+                    if j == len(capacities) - 1: # All constraints satisfied for this set
+                        selection = comb
     choices = [items.index(choice) for choice in selection]
     return bestval, selection, choices

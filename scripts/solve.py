@@ -41,6 +41,6 @@ def solve(args):
 
     test_algo(fptas, e=.1)
     test_algo(greedy)
-    #test_algo(naive)
+    test_algo(naive)
     selection = test_algo(dynamic_knapsack)
     return selection
