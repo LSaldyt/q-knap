@@ -85,7 +85,7 @@ def run(args):
     bname = basename(filename)
     if not os.path.exists(bname + '.v'):
         shutil.copy(filename, bname + '.v')
-        try:
+    try:
         a, b = to_output(bname, iterations)
         resulta = interpret_output(a)
         resultb = interpret_output(b)
