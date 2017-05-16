@@ -11,3 +11,4 @@ output/*/*
 *.aux
 etc/IBMtoken
 papers/paper.toc
+lib
