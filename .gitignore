@@ -9,3 +9,4 @@ output/*.qubo
 *.log
 *.aux
 etc/IBMtoken
+papers/paper.toc

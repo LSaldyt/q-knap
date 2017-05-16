@@ -39,7 +39,7 @@ def solve(args):
         print('\n{}\n'.format('_' * 80))
         return selection
 
-    #test_algo(fptas)
+    test_algo(fptas, e=.1)
     #test_algo(greedy)
     #test_algo(naive)
     selection = test_algo(dynamic_knapsack)

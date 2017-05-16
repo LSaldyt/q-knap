@@ -9,9 +9,9 @@
   !use_macro NAND $id00005  # $abc$555$auto$blifparse.cc:286:parse_blif$557
   !use_macro NOR $id00006  # $abc$555$auto$blifparse.cc:286:parse_blif$558
   !use_macro AND $id00007  # $abc$555$auto$blifparse.cc:286:parse_blif$559
+  $id00007.B = $id00004.Y  # $abc$555$n7
   $id00007.A = $id00006.Y  # $abc$555$n9
   $id00006.A = $id00005.Y  # $abc$555$n8
-  $id00007.B = $id00004.Y  # $abc$555$n7
   $id00007.Y = valid
   $id00004.B = C
   A = $id00006.B

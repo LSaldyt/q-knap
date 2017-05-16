@@ -16,7 +16,7 @@ module var5_multi(A, B, C, D, E, valid);
   input D;
   (* src = "var5_multi.v:3" *)
   input E;
-  (* src = "var5_multi.v:9" *)
+  (* src = "var5_multi.v:10" *)
   wire [6:0] total_value;
   (* src = "var5_multi.v:4" *)
   output valid;

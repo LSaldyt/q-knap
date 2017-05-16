@@ -6,7 +6,8 @@ module var5_multi (A, B, C, D, E, valid);
     wire [6:0] min_value = 7'd30;
     wire [6:0] max_weight = 7'd50;
     wire [6:0] max_volume = 7'd50;
-wire [6:0]  total_value = 
+
+    wire [6:0]  total_value = 
         A * 7'd4
       + B * 7'd8
       + C * 7'd1
