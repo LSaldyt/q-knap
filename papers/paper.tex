@@ -90,15 +90,13 @@
 
 This report explores different programming interfaces for solving NP-complete problems.
 Different classical algorithms are compared to the interfaces for both the DWave quantum annealer and the IBM Quantum Experience Computer.
-This paper does not implement a direct benchmark between IBM and DWave.
-Instead, it describes the programming interface for each, and relies on other publications for benchmarks, which are hard to do correctly.
 
-Programming a quantum annealer to solve certain kinds of NP-complete problems is actually very simple.
 Because of the rich software toolchains surrounding the DWave, it is easy to describe problems for the annealer to solve.
 However, DWave has limitations in the size of problems it can run and how quickly it can run them.
-So, DWave (and quantum annealing in general), despite having a useable interface, still needs many improvements before it will be useful on real problems.
+DWave (and quantum annealing in general), despite having a useable interface, still needs many improvements before it will be useful on real problems.
 
-IBM does not allow the same level of abstraction as DWave, but has other benefits.
+IBM does not allow the same level of abstraction as DWave, but has been proven asymptotically faster than classical computing.
+However, it is limited to five qubits, effectively making it limited to a five variable problem if the problem is run in full.
 If the interface for programming a Universal Gate Quantum Computer improves, IBM will be a strong option for solving NP-complete problems quickly.
 
 While Quantum Computation has proved useful on fabricated problems, there is still a long time before it has a true impact on real world problem solving.
@@ -109,8 +107,9 @@ While Quantum Computation has proved useful on fabricated problems, there is sti
 
 The Knapsack problem and other NP-complete problems have immediate real-world applications. 
 However, as the size of an NP-complete problem increases, it becomes very difficult to solve.
-Quantum Computation can allow NP-complete problems to be solved with a polynomial speedup.
-This paper explores different interfaces in the hope of improving the availability of quantum computation, and demonstrating the ease of use of existing interfaces.
+Quantum Computation can allow NP-complete problems to be solved more quickly.
+Quantum Annealing may eventually allow for the same.
+This paper explores different interfaces in the hope of improving the availability of quantum problem solving, and demonstrating the ease of use of existing interfaces.
 \newpage
 
 % ==================================================
@@ -121,7 +120,7 @@ This paper explores different interfaces in the hope of improving the availabili
 \subsection{Classical Knapsack Implementations}
 % --------------------------------------------------
 
-Firstly, this paper shows three classical implementations of the Knapsack problem, each written in Python.
+Firstly, this paper shows classical implementations of the Knapsack problem, each written in Python.
 The purpose of this is to make it clear how classical interfaces look compared to quantum interfaces.
 
 % .................................................. 
@@ -157,6 +156,16 @@ Notice that the fptas solver calls the dynamic programming solver (with a simple
 
 \lstset{language=Python}
 \lstinputlisting[label=samplecode,caption=Fully Polynomial Time Approximation Scheme]{../scripts/fptas.py}
+\newpage
+
+% .................................................. 
+\subsubsection{Greedy hueristic solver}
+% .................................................. 
+
+The current implementation of the greedy algorithm only works on single constraint problems, but is very fast:
+
+\lstset{language=Python}
+\lstinputlisting[label=samplecode,caption=Greedy Knapsack Algorithm]{../scripts/greedy.py}
 \newpage
 
 % --------------------------------------------------
@@ -221,6 +230,7 @@ A csv file, which also compiles to the Verilog shown previously:
     every head row/.style={before row=\hline,after row=\hline},
     every last row/.style={after row=\hline},
     ]{../csvs/single.csv}
+
 \newpage
 
 % .................................................. 
@@ -233,13 +243,22 @@ Instead, Universal Gate Quantum Computing offers a polynomial speedup based on G
 However, the interface for using a Universal Gate Quantum Computer is much different than using a classical computer or the DWave.
 By comparison, the DWave interface may as well be classical, since, as this paper has showed, classical languages can be compiled to annealing problems runnable on the DWave.
 
-The language of Universal Gate Quantum computers is Quantum Gates, which are expressed in qasm files.
+The language of Universal Gate Quantum computers usually is Quantum Gates, which are expressed in qasm files.
 While a qasm file describing Grover's search is potentially short, it requires expert knowledge to write, as each line of code represents multiplying a vector of complex numbers by a matrix of complex numbers.
 Like with the DWave interface, the code will look different for each problem, as well as scaling with the problem itself.
 An advantage to the classical interface is that the code can stay the same even when the problem changes.       
 
+Note that this code shown solves a two variable version of the knapsack problem.
+
 \lstset{language=C}
 \lstinputlisting[label=samplecode,caption=Grover's search on a two-variable problem]{../qasms/grover_n2_a01.qasm}
+
+% .................................................. 
+\subsubsection{Alternate Gate Model Languages}
+% .................................................. 
+
+In addition to qasm, QML or QCL can be used to program a gate model quantum computer.
+[...]
 
 % ==================================================
 \section{Results}
@@ -260,25 +279,31 @@ weight is less than or equal to 50
 volume is less than or equal to 50
 \end{verbatim}
 
-Below is output from these three classical solvers on a five variable knapsack problem:
+Below is output from the classical solvers on a five variable knapsack problem:
+(Run with 1,000,000 iterations)
 
 \begin{verbatim}
-fptas : 0.00019335599972691853
-{'D', 'E'}
+lucas@qed:~/projects/lanl/qnp$ ./qnp solve csvs/var5_multi.csv 1000000
+['csvs/var5_multi.csv', '1000000']
+fptas : 120.80939865000255
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
 value is satisfied (30)
 weight is satisfied (45)
 volume is satisfied (5)
 ________________________________________________________________________________
 
-naive : 0.00013976199988974258
-{'D', 'E'}
+naive : 107.68942248700478
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
 value is satisfied (30)
 weight is satisfied (45)
 volume is satisfied (5)
 ________________________________________________________________________________
 
-dynamic_knapsack : 0.00015341899961640593
-{'D', 'E'}
+dynamic_knapsack : 114.03447730200423
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
 value is satisfied (30)
 weight is satisfied (45)
 volume is satisfied (5)
@@ -336,23 +361,23 @@ This report does not include a five variable problem being run on IBM's topology
 \section{Discussion}
 % ==================================================
 
+\textit{SECTION IN PROGRESS}
+
 Quantum Computers currently do not help solve non trivial real world problems in an advantageous way.
 
-DWave has superior interface, but has more hardware improvements to make.
+DWave currently has a superior interface, but has not proven an asymptotic advantage.
 
-Both IBM and DWave need hardware improvements, but DWave needs more.
-
-IBM Interface is only usable for specialists, not layprogrammers
+The IBM Interface is less usable for layprogrammers, but the gate model has been theoretically proven faster than the classical model of computation. 
 
 % ==================================================
 \section{Appendix}
 % ==================================================
 
 \begin{thebibliography}{9}
-    \bibitem{problem-solving-paper}
-        A. Newell, J. C. Shaw, H. A. Simon
-        \textit{Report on a general problem-solving program}
-        The Rand corporation, Santa Monica, California, 1958
+    \bibitem{x}
+        Authors
+        \textit{Title}
+        Pub, Loc, Date
 \end{thebibliography}
 
 \end{document}
