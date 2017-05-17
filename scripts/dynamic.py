@@ -55,9 +55,5 @@ def dynamic_knapsack(items, outerConstraints):
                     c - items[i - 1][n + 1] for n, c in enumerate(k)
                     ]
     result.reverse()
-
-    #print('Knapsack problem solved classically with {} static evaluations:'.format(len(bestvalue.cache)))
     choices = [items.index(choice) for choice in result]
     return bestvalue(len(items), outerConstraints), result, choices
-
-
