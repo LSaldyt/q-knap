@@ -110,7 +110,6 @@ However, as the size of an NP-complete problem increases, it becomes very diffic
 Quantum Computation can allow NP-complete problems to be solved more quickly.
 Quantum Annealing may eventually allow for the same.
 This paper explores different interfaces in the hope of improving the availability of quantum problem solving, and demonstrating the ease of use of existing interfaces.
-\newpage
 
 % ==================================================
 \section{Methods}
@@ -131,7 +130,6 @@ The simplest interface for solving the knapsack problem is a naive python implem
 \lstset{language=Python}
 \lstinputlisting[label=samplecode,caption=Naive Knapsack]{../scripts/naive.py}
 However, the effectiveness of this implementation is limited, and only useful for showing how the code scales with different solvers.
-\newpage
 
 % .................................................. 
 \subsubsection{Dynamic Programming Implementation}
@@ -142,7 +140,6 @@ However, the code necessary is more difficult to write from scratch:
 
 \lstset{language=Python}
 \lstinputlisting[label=samplecode,caption=Dynamic Programming]{../scripts/dynamic.py}
-\newpage
 
 % .................................................. 
 \subsubsection{Fully Polynomial Approximation Scheme Implementation}
@@ -156,7 +153,6 @@ Notice that the fptas solver calls the dynamic programming solver (with a simple
 
 \lstset{language=Python}
 \lstinputlisting[label=samplecode,caption=Fully Polynomial Time Approximation Scheme]{../scripts/fptas.py}
-\newpage
 
 % .................................................. 
 \subsubsection{Greedy hueristic solver}
@@ -166,7 +162,6 @@ The current implementation of the greedy algorithm only works on single constrai
 
 \lstset{language=Python}
 \lstinputlisting[label=samplecode,caption=Greedy Knapsack Algorithm]{../scripts/greedy.py}
-\newpage
 
 % --------------------------------------------------
 \subsection{Quantum Knapsack Implementations}
@@ -185,7 +180,6 @@ Below is a Verilog circuit, its corresponding image , and its corresponding imag
 \lstset{language=Verilog}
 \lstinputlisting[label=samplecode,caption=Single Constraint Knapsack Problem]{../output/vs/single.v}
 
-\newpage
 \begin{figure}[h!]
   \includegraphics[width=\linewidth]{../output/circuitimages/single.png}
   \caption{Single constraint circuit representation}
@@ -203,8 +197,6 @@ To simplify the construction of the Verilog file, one can use additional softwar
     \item{QA-Prolog, a compiler from Prolog to Verilog (shown below)}
     \item{QNP, which includes a script that generates Verilog from a csv file describing the knapsack problem}
 \end{enumerate}
-
-\newpage
 
 % .................................................. 
 \subsubsection{DWave Knapsack Implementations : Prolog}
@@ -230,8 +222,6 @@ A csv file, which also compiles to the Verilog shown previously:
     every head row/.style={before row=\hline,after row=\hline},
     every last row/.style={after row=\hline},
     ]{../csvs/single.csv}
-
-\newpage
 
 % .................................................. 
 \subsubsection{Theoretical IBM Quantum Experience Knapsack Implementations}
@@ -361,64 +351,73 @@ This report does not include a five variable problem being run on IBM's topology
 \section{Discussion}
 % ==================================================
 
-\textit{SECTION IN PROGRESS}
-
 Quantum Computers currently do not help solve non trivial real world problems in an advantageous way.
-
 DWave currently has a superior interface, but has not proven an asymptotic advantage.
+The IBM interface is less usable for layprogrammers, but the gate model has been theoretically proven faster than the classical model of computation. 
 
-The IBM Interface is less usable for layprogrammers, but the gate model has been theoretically proven faster than the classical model of computation. 
+In the future, IBM and Google plan on building 50-qubit gate model computers, which will hopefully be able to demonstrate experimental quantum speedups for the gate model.
+D-Wave also plans on extending its hardware, and will continue releasing more advanced Quantum Annealers.
+Hopefully, D-Wave can demonstrate an asymptotic advantage both theoretically and experimentally.
+
+Because it has been theoretically proven, the Gate Model seems to likeliest to be successful in the future.
+However, it needs advanced methods for error correction, which need to be developed further for gate model quantum computation to become a reality.
+Also, it would be greatly improved with an additional layer of abstraction in the programming interface. 
+
+DWave needs to prove an asymptotic speedup, as well as developing its own fault-tolerance.
+Currently, there do not exist robust, realizable schemes for fault-tolerance in annealing systems.
+If these are developed, D-Wave also be a potential option for quantum computation in the future.
+
+Until these improvements happen, however, Quantum Computing will remain nothing more than an interesting topic for discussion.
 
 % ==================================================
 \section{Appendix}
 % ==================================================
 
-\begin{thebibliography}{9}
-    \bibitem{}
-        Pakin, Scott
-        \textit{Performing Fully Parallel Constraint Logic Programming on a Quantum Annealer}
-        Cambridge University Press, 2017
-    \bibitem{}
-        Grover, Lok K.
-        \textit{A fast quantum mechanical algorithm for database search}
-        Proceedings of 28th Symp Theory of Computing, 1996
-    \bibitem{}
-        John Wright
-        \textit{Lecture 4: Grover's Algorithm}
-        Carnegie Mellon University, 2015
-    \bibitem{}
+\begin{thebibliography}{11}
+    \bibitem{qknapsack}
         Arvind, V., Schuler, Rainer
         \textit{The Quantum Query Complexity of 0-1 Knapsack and Associated Claw Problems}
         Archiv, Accessed 2017
-    \bibitem{}
+    \bibitem{qmapcolor}
         Dahl, E. D.
         \textit{Programming With the D-Wave: Map Coloring Problem}
         D-Wave systems, 2013
-    \bibitem{}
-        Ines Dutra
-        \textit{Constraint Logic Programming: a short tutorial}
-        University of Porto, 2010
-    \bibitem{}
+    \bibitem{qalgzoo}
         Jordan, Stephen
         \textit{Quantum Algorithm Zoo}
         math.nist.gov/quantum/zoo, Accessed 2017
-    \bibitem{}
+    \bibitem{qopt}
         Booth, Michael, Reinhardt, Steven P., Roy, Aidan
         \textit{Partitioning Optimization Problems for Hybrid Classical/Quantum Execution}
         D-Wave systems, 2017
-    \bibitem{}
+    \bibitem{qxsat0}
         Hen, Itay, Young, A. P.
         \textit{Exponential Complexity of the Quantum Adiabatic Algorithm for certain Satisfiability Problems}
         Department of Physics, UC Santa Cruz, 2011
-    \bibitem{}
+    \bibitem{qxsat1}
         Mandra, Salvatore, Guerreschi, Gian Giacomo, Aspuru-Guzik, Alan
         \textit{Faster than Classical Algorithm for Dense Formulas of Exact Satisfiability and Occupation Problems}
         Harvard University, 2016
-    \bibitem{}
+    \bibitem{qa-prolog0}
+        Pakin, Scott
+        \textit{Performing Fully Parallel Constraint Logic Programming on a Quantum Annealer}
+        Cambridge University Press, 2017
+    \bibitem{qa-prolog1}
+        Ines Dutra
+        \textit{Constraint Logic Programming: a short tutorial}
+        University of Porto, 2010
+    \bibitem{grover0}
+        Grover, Lok K.
+        \textit{A fast quantum mechanical algorithm for database search}
+        Proceedings of 28th Symp Theory of Computing, 1996
+    \bibitem{grover1}
+        John Wright
+        \textit{Lecture 4: Grover's Algorithm}
+        Carnegie Mellon University, 2015
+    \bibitem{grover2}
         Ambainis, Andris
         \textit{Quantum Search Algorithms}
         Archiv, Accessed 2017
-
 \end{thebibliography}
 
 \end{document}
