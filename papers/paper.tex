@@ -1,0 +1,423 @@
+\documentclass{article}
+
+\usepackage{indentfirst}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{pgfplotstable}
+\doublespacing
+
+% ================================================================================= 
+% Package for showing source code
+% ================================================================================= 
+
+ \usepackage{listings}
+  \usepackage{courier}
+ \lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         %numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+            frame=b,         
+ %        keywordstyle=[1]\textbf,    % Stil der Keywords
+ %        keywordstyle=[2]\textbf,    %
+ %        keywordstyle=[3]\textbf,    %
+ %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+         stringstyle=\color{blue}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+ }
+ \lstloadlanguages{% Check Dokumentation for further languages ...
+         %[Visual]Basic
+         %Pascal
+         %C
+         %C++
+         %XML
+         %HTML
+         %Java
+         Python
+ }
+    %\DeclareCaptionFont{blue}{\color{blue}} 
+
+  %\captionsetup[lstlisting]{singlelinecheck=false, labelfont={blue}, textfont={blue}}
+  \usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+% ================================================================================= 
+% Package for flowcharts/diagrams
+% ================================================================================= 
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io}        = [rectangle, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=blue!30]
+\tikzstyle{process}   = [diamond, minimum width=2cm, minimum height=0cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{arrow}     = [thick,->,>=stealth]
+
+% ==================================================
+% Paper
+% ==================================================
+
+\title{Quantum Programming Interfaces for NP-complete problems}
+\date{05-10-2017}
+\author{Lucas Saldyt}
+
+\begin{document}
+
+\maketitle
+\pagenumbering{gobble}
+\newpage
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+% ==================================================
+\section{Abstract}
+% ==================================================
+
+This report explores different programming interfaces for solving NP-complete problems.
+Different classical algorithms are compared to the interfaces for both the DWave quantum annealer and the IBM Quantum Experience Computer.
+
+Because of the rich software toolchains surrounding the DWave, it is easy to describe problems for the annealer to solve.
+However, DWave has limitations in the size of problems it can run and how quickly it can run them.
+DWave (and quantum annealing in general), despite having a useable interface, still needs many improvements before it will be useful on real problems.
+
+IBM does not allow the same level of abstraction as DWave, but has been proven asymptotically faster than classical computing.
+However, it is limited to five qubits, effectively making it limited to a five variable problem if the problem is run in full.
+If the interface for programming a Universal Gate Quantum Computer improves, IBM will be a strong option for solving NP-complete problems quickly.
+
+While Quantum Computation has proved useful on fabricated problems, there is still a long time before it has a true impact on real world problem solving.
+
+% ==================================================
+\section{Introduction}
+% ==================================================
+
+The Knapsack problem and other NP-complete problems have immediate real-world applications. 
+However, as the size of an NP-complete problem increases, it becomes very difficult to solve.
+Quantum Computation can allow NP-complete problems to be solved more quickly.
+Quantum Annealing may eventually allow for the same.
+This paper explores different interfaces in the hope of improving the availability of quantum problem solving, and demonstrating the ease of use of existing interfaces.
+
+% ==================================================
+\section{Methods}
+% ==================================================
+
+% --------------------------------------------------
+\subsection{Classical Knapsack Implementations}
+% --------------------------------------------------
+
+Firstly, this paper shows classical implementations of the Knapsack problem, each written in Python.
+The purpose of this is to make it clear how classical interfaces look compared to quantum interfaces.
+
+% .................................................. 
+\subsubsection{Naive Implementation}
+% .................................................. 
+
+The simplest interface for solving the knapsack problem is a naive python implementation that iterates through every combination of items, and returns the combination with the highest value that satisfies the problem's constraints.
+\lstset{language=Python}
+\lstinputlisting[label=samplecode,caption=Naive Knapsack]{../scripts/naive.py}
+However, the effectiveness of this implementation is limited, and only useful for showing how the code scales with different solvers.
+
+% .................................................. 
+\subsubsection{Dynamic Programming Implementation}
+% .................................................. 
+
+Traditionally, the optimal way to solve the knapsack is through dynamic programming.
+However, the code necessary is more difficult to write from scratch:
+
+\lstset{language=Python}
+\lstinputlisting[label=samplecode,caption=Dynamic Programming]{../scripts/dynamic.py}
+
+% .................................................. 
+\subsubsection{Fully Polynomial Approximation Scheme Implementation}
+% .................................................. 
+
+However, a fully polynomial approximation scheme is more accurately comparable to the problem being run on the DWave.
+A FPTAS simplifies the problem given, solving it to within a margin of error.
+After simplification, FPTAS uses dynamic programming.
+For problems with few variables, the results of FPTAS are very similar to the results of dynamic programming, even if the margin of error is allowed to be high.
+Notice that the fptas solver calls the dynamic programming solver (with a simpler version of the given problem). Even though its implementation appears to be short, it is actually much larger because it includes the dynamic programming code.
+
+\lstset{language=Python}
+\lstinputlisting[label=samplecode,caption=Fully Polynomial Time Approximation Scheme]{../scripts/fptas.py}
+
+% .................................................. 
+\subsubsection{Greedy hueristic solver}
+% .................................................. 
+
+The current implementation of the greedy algorithm only works on single constraint problems, but is very fast:
+
+\lstset{language=Python}
+\lstinputlisting[label=samplecode,caption=Greedy Knapsack Algorithm]{../scripts/greedy.py}
+
+% --------------------------------------------------
+\subsection{Quantum Knapsack Implementations}
+% --------------------------------------------------
+
+While there are many ways of providing problems to the DWave quantum computer (Such as APIs for Python, C++, or Haskell, or an array of Domain Specific Languages), This paper investigates the highest-level implementations possible for the DWave.
+
+% .................................................. 
+\subsubsection{DWave Knapsack Implementations : Verilog}
+% .................................................. 
+
+The first way to solve an NP-complete problem on the DWave is to provide a Verilog implementation of a classical "oracle" circuit that checks if a solution is correct.
+This provides enough information to generate a Quantum Binary Optimization Problem, which the DWave can perform annealing on.
+Below is a Verilog circuit, its corresponding image , and its corresponding image after problem reduction (to boolean satisfiability).
+
+\lstset{language=Verilog}
+\lstinputlisting[label=samplecode,caption=Single Constraint Knapsack Problem]{../output/vs/single.v}
+
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{../output/circuitimages/single.png}
+  \caption{Single constraint circuit representation}
+  \label{fig:single}
+\end{figure}
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{../output/circuitimages/single_opt.png}
+  \caption{Optimized single constraint circuit representation}
+  \label{fig:opt_single}
+\end{figure}
+\newpage
+
+To simplify the construction of the Verilog file, one can use additional software:
+\begin{enumerate}
+    \item{QA-Prolog, a compiler from Prolog to Verilog (shown below)}
+    \item{QNP, which includes a script that generates Verilog from a csv file describing the knapsack problem}
+\end{enumerate}
+
+% .................................................. 
+\subsubsection{DWave Knapsack Implementations : Prolog}
+% .................................................. 
+
+Using the QA-Prolog software, Prolog can produce similar code to the Verilog shown above.
+The single constraint problem, written in Prolog:
+\lstset{language=Prolog}
+\lstinputlisting[label=samplecode,caption=Single Constraint Knapsack Problem]{../prolog/single.pl}
+
+% .................................................. 
+\subsubsection{DWave Knapsack Implementations : CSV}
+% .................................................. 
+
+A csv file, which also compiles to the Verilog shown previously:
+
+\pgfplotstabletypeset[
+    col sep=comma,
+    string type,
+    columns/name/.style={column name=Name, column type={|l}},
+    columns/surname/.style={column name=Surname, column type={|l}},
+    columns/age/.style={column name=Age, column type={|c|}},
+    every head row/.style={before row=\hline,after row=\hline},
+    every last row/.style={after row=\hline},
+    ]{../csvs/single.csv}
+
+% .................................................. 
+\subsubsection{Theoretical IBM Quantum Experience Knapsack Implementations}
+% .................................................. 
+
+Quantum Annealing is not the only alternate method of solving the knapsack problem.
+Instead, Universal Gate Quantum Computing offers a polynomial speedup based on Grover's search.
+
+However, the interface for using a Universal Gate Quantum Computer is much different than using a classical computer or the DWave.
+By comparison, the DWave interface may as well be classical, since, as this paper has showed, classical languages can be compiled to annealing problems runnable on the DWave.
+
+The language of Universal Gate Quantum computers usually is Quantum Gates, which are expressed in qasm files.
+While a qasm file describing Grover's search is potentially short, it requires expert knowledge to write, as each line of code represents multiplying a vector of complex numbers by a matrix of complex numbers.
+Like with the DWave interface, the code will look different for each problem, as well as scaling with the problem itself.
+An advantage to the classical interface is that the code can stay the same even when the problem changes.       
+
+Note that this code shown solves a two variable version of the knapsack problem.
+
+\lstset{language=C}
+\lstinputlisting[label=samplecode,caption=Grover's search on a two-variable problem]{../qasms/grover_n2_a01.qasm}
+
+% .................................................. 
+\subsubsection{Alternate Gate Model Languages}
+% .................................................. 
+
+In addition to qasm, QML or QCL can be used to program a gate model quantum computer.
+[...]
+
+% ==================================================
+\section{Results}
+% ==================================================
+
+A description of the five variable knapsack problem run below:
+\begin{verbatim}
+Given the following items:
+Name : [value, weight, volume]
+A    : [4,     28,      27]
+B    : [8,      8,      27]
+C    : [1,     27,       4]
+D    : [20,    18,       4]
+E    : [10,    27,       1]
+Choose a set, such that:
+value is greater than or equal to 30
+weight is less than or equal to 50
+volume is less than or equal to 50
+\end{verbatim}
+
+Below is output from the classical solvers on a five variable knapsack problem:
+(Run with 1,000,000 iterations)
+
+\begin{verbatim}
+lucas@qed:~/projects/lanl/qnp$ ./qnp solve csvs/var5_multi.csv 1000000
+['csvs/var5_multi.csv', '1000000']
+fptas : 120.80939865000255
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
+________________________________________________________________________________
+
+naive : 107.68942248700478
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
+________________________________________________________________________________
+
+dynamic_knapsack : 114.03447730200423
+(1000000 iterations, timing=time.perf_time())
+{'E', 'D'}
+value is satisfied (30)
+weight is satisfied (45)
+volume is satisfied (5)
+________________________________________________________________________________
+\end{verbatim}
+
+DWave's annealing successfully solves the 5 variable knapsack problem as well:
+
+\begin{verbatim}
+Submitting the problem to the DW2X solver.
+
+[...]
+
+Timing information:
+
+    Measurement                    Value (us)
+    ------------------------------ ----------
+    total_real_time                    199315
+    anneal_time_per_run                    20
+    post_processing_overhead_time        4406
+    qpu_sampling_time                  181780
+    readout_time_per_run                  141
+    qpu_delay_time_per_sample              21
+    qpu_anneal_time_per_sample             20
+    total_post_processing_time           4406
+    qpu_programming_time                15160
+    run_time_chip                      181780
+    qpu_access_time                    199315
+    qpu_readout_time_per_sample           141
+
+Number of solutions found:
+
+        75 total
+        33 with no broken chains or broken pins
+         1 at minimal energy
+         1 excluding duplicate variable assignments
+
+Solution #1 (energy = -26.00, tally = 56):
+
+    Name                Spin  Boolean
+    ------------------  ----  --------
+    harder_multi.A        -1  False  
+    harder_multi.B        -1  False  
+    harder_multi.C        -1  False  
+    harder_multi.D        +1  True   
+    harder_multi.E        +1  True   
+    harder_multi.valid    +1  True    
+
+{'D', 'E'}
+\end{verbatim}
+
+This report does not include a five variable problem being run on IBM's topology.
+
+% ==================================================
+\section{Discussion}
+% ==================================================
+
+Quantum Computers currently do not help solve non trivial real world problems in an advantageous way.
+DWave currently has a superior interface, but has not proven an asymptotic advantage.
+The IBM interface is less usable for layprogrammers, but the gate model has been theoretically proven faster than the classical model of computation. 
+
+In the future, IBM and Google plan on building 50-qubit gate model computers, which will hopefully be able to demonstrate experimental quantum speedups for the gate model.
+D-Wave also plans on extending its hardware, and will continue releasing more advanced Quantum Annealers.
+Hopefully, D-Wave can demonstrate an asymptotic advantage both theoretically and experimentally.
+
+Because it has been theoretically proven, the Gate Model seems to likeliest to be successful in the future.
+However, it needs advanced methods for error correction, which need to be developed further for gate model quantum computation to become a reality.
+Also, it would be greatly improved with an additional layer of abstraction in the programming interface. 
+
+DWave needs to prove an asymptotic speedup, as well as developing its own fault-tolerance.
+Currently, there do not exist robust, realizable schemes for fault-tolerance in annealing systems.
+If these are developed, D-Wave also be a potential option for quantum computation in the future.
+
+Until these improvements happen, however, Quantum Computing will remain nothing more than an interesting topic for discussion.
+
+% ==================================================
+\section{Appendix}
+% ==================================================
+
+\begin{thebibliography}{11}
+    \bibitem{qknapsack}
+        Arvind, V., Schuler, Rainer
+        \textit{The Quantum Query Complexity of 0-1 Knapsack and Associated Claw Problems}
+        Archiv, Accessed 2017
+    \bibitem{qmapcolor}
+        Dahl, E. D.
+        \textit{Programming With the D-Wave: Map Coloring Problem}
+        D-Wave systems, 2013
+    \bibitem{qalgzoo}
+        Jordan, Stephen
+        \textit{Quantum Algorithm Zoo}
+        math.nist.gov/quantum/zoo, Accessed 2017
+    \bibitem{qopt}
+        Booth, Michael, Reinhardt, Steven P., Roy, Aidan
+        \textit{Partitioning Optimization Problems for Hybrid Classical/Quantum Execution}
+        D-Wave systems, 2017
+    \bibitem{qxsat0}
+        Hen, Itay, Young, A. P.
+        \textit{Exponential Complexity of the Quantum Adiabatic Algorithm for certain Satisfiability Problems}
+        Department of Physics, UC Santa Cruz, 2011
+    \bibitem{qxsat1}
+        Mandra, Salvatore, Guerreschi, Gian Giacomo, Aspuru-Guzik, Alan
+        \textit{Faster than Classical Algorithm for Dense Formulas of Exact Satisfiability and Occupation Problems}
+        Harvard University, 2016
+    \bibitem{qa-prolog0}
+        Pakin, Scott
+        \textit{Performing Fully Parallel Constraint Logic Programming on a Quantum Annealer}
+        Cambridge University Press, 2017
+    \bibitem{qa-prolog1}
+        Ines Dutra
+        \textit{Constraint Logic Programming: a short tutorial}
+        University of Porto, 2010
+    \bibitem{grover0}
+        Grover, Lok K.
+        \textit{A fast quantum mechanical algorithm for database search}
+        Proceedings of 28th Symp Theory of Computing, 1996
+    \bibitem{grover1}
+        John Wright
+        \textit{Lecture 4: Grover's Algorithm}
+        Carnegie Mellon University, 2015
+    \bibitem{grover2}
+        Ambainis, Andris
+        \textit{Quantum Search Algorithms}
+        Archiv, Accessed 2017
+\end{thebibliography}
+
+\end{document}

@@ -4,7 +4,7 @@ from math import log
 from functools import wraps
 
 from .run import runc, to_output, interpret_output
-from .util import read_CSV, suppress_output, basename, verify_set
+from .util import read_CSV, suppress_output, basename, verify_set, get_iterations
 
 verilogOutline = """
 module %s (%s, valid);
@@ -46,7 +46,7 @@ def generate_knapsack(rows, constraints, moduleName, wireSize=32):
     return verilogOutline % (moduleName, 
                             inputs, 
                             inputs,
-                            parameters + '\n' +
+                            parameters + '\n\n    ' +
                             wireAssignments + '\n' +
                             outputAssignments)
 
@@ -84,16 +84,22 @@ def creator(f):
             verilog = f(args)
             with open(outputfile, 'w') as outfile:
                 outfile.write(verilog)
-            a, b = to_output(bname)
+            iterations = get_iterations(args)
+            a, b = to_output(bname, iterations)
             resulta = interpret_output(a)
-            resulta = [item for item in resulta if '$' not in item[0]]
             resultb = interpret_output(b)
             print('minizinc')
             print(resulta)
             print('qbsolv')
             print(resultb)
             if resulta != resultb:
-                print('{} (from minizinc) is not equal to {} (from qbsolv)'.format(resulta, resultb))
+                print('    "{}"\n    (from minizinc) is not equal to\n    "{}"\n    (from qbsolv):'.format(resulta, resultb))
+                '''
+                print('minizinc output:')
+                print(a)
+                print('qbsolv output:')
+                print(b)
+                '''
             return resulta, resultb
         finally:
             with suppress_output():
@@ -106,7 +112,7 @@ def create_knapsack(args):
     inputfile = args[0]
     bname = basename(inputfile)
     rows, constraints = read_CSV(args)
-    wireSize = max_int(rows) if len(args) == 1 else int(args[1])
+    wireSize = max_int(rows)
     print('Wire size selected as {}'.format(wireSize))
     return generate_knapsack(rows, constraints, bname, wireSize=wireSize)
 

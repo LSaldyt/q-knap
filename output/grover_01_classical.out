@@ -1,0 +1,35 @@
+lucas@qed:~/projects/lanl/qnp$ ./qnp solve csvs/grover01.csv 1000000
+['csvs/grover01.csv', '1000000']
+fptas : 29.521355609991588
+(1000000 iterations, timing=time.perf_time())
+{'B'}
+value is satisfied (9)
+weight is satisfied (2)
+
+________________________________________________________________________________
+
+greedy : 7.313615334001952
+(1000000 iterations, timing=time.perf_time())
+{'B'}
+value is satisfied (9)
+weight is satisfied (2)
+
+________________________________________________________________________________
+
+naive : 8.603666344002704
+(1000000 iterations, timing=time.perf_time())
+{'B'}
+value is satisfied (9)
+weight is satisfied (2)
+
+________________________________________________________________________________
+
+dynamic_knapsack : 26.09802199699334
+(1000000 iterations, timing=time.perf_time())
+{'B'}
+value is satisfied (9)
+weight is satisfied (2)
+
+________________________________________________________________________________
+
+

@@ -1,0 +1,12 @@
+['csvs/grover01.csv', '100']
+Wire size selected as 4
+qbsolv : 9.96041512300144
+minizinc : 12.361682016999112
+minizinc
+[('grover01.B', 1)]
+qbsolv
+[('grover01.A', 0), ('grover01.B', 0)]
+    "[('grover01.B', 1)]"
+    (from minizinc) is not equal to
+    "[('grover01.A', 0), ('grover01.B', 0)]"
+    (from qbsolv):

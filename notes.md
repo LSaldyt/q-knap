@@ -53,3 +53,7 @@ gate cu1(lambda) a,b
 }
 cu1(pi/2) q[0],q[1];
 ```
+
+## Interface comparisons
+
+[<2;97;16M

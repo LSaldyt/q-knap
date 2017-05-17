@@ -16,7 +16,7 @@ module single(A, B, C, D, E, valid);
   input D;
   (* src = "single.v:3" *)
   input E;
-  (* src = "single.v:8" *)
+  (* src = "single.v:9" *)
   wire [4:0] total_value;
   (* src = "single.v:4" *)
   output valid;

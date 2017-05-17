@@ -3,6 +3,7 @@ from contextlib import contextmanager
 
 import sys, os
 import time
+import signal
 
 @contextmanager
 def suppress_stdout():
@@ -23,6 +24,14 @@ def suppress_output():
         finally:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
+
+def get_iterations(args):
+    if len(args) > 1:
+        i = int(args[1])
+        assert(i > 0)
+        return i
+    else:
+        return 1
 
 # Read rows and constraints from csvInput
 # rows is a list of the form [(A, [4, 12]), (B, [2, 1])]
@@ -53,6 +62,12 @@ def read_CSV(args):
         csvInput = [line for line in infile]
         return _read_CSV_input(csvInput)
 
+def to_set(results):
+    results = [t[0].split('.')[-1] for t in results if t[1] == 1]
+    selection = {item for item in results if item != 'valid'}
+    print(selection)
+    return selection
+
 def verify_set(args, s):
     rows, constraints = read_CSV(args)
     initial = [0 for _ in range(len(list(rows.values())[0]))]
@@ -77,3 +92,19 @@ def timedblock(label):
         end = time.perf_counter()
         t   = end - start
         print('{} : {}'.format(label, t))
+
+
+class timeout:
+    def __init__(self, seconds=1, error_message='Timeout'):
+        self.seconds = seconds
+        self.error_message = error_message
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError(self.error_message)
+    def __enter__(self):
+        if self.seconds is not None:
+            signal.signal(signal.SIGALRM, self.handle_timeout)
+            signal.setitimer(signal.ITIMER_REAL,self.seconds)
+            #signal.alarm(self.seconds)
+    def __exit__(self, type, value, traceback):
+        if self.seconds is not None:
+            signal.alarm(0)

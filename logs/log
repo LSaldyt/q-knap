@@ -57,20 +57,84 @@ Week one journal
 
 May 8th
 
-1h Write Journal entry for first week
-1h Prepare for in-person meeting
-5h In person meeting and tour of Los Alamos Laboratories
+    1h Write Journal entry for first week
+    1h Prepare for in-person meeting
+    1.5h Drive to Los Alamos
+    1h Meet other team members, discuss ongoing projects like Haskell SAPI bindings
+    1h Lunch with S. Pakin, discuss Senior Experience future directions and current progress
+    1.5h Drive back to Rio Rancho
 
 May 9th
 
+    1h Test optimized knapsack, implement polynomial approximation
+    1h Correspondence with on-campus supervisor
+    1h Begin interface comparison paper
+    2h Review papers for Grover's algorithm
+    1h Test existing implementations of Grover's algorithm on simulated universal gate circuits
+    1h Review "Exponential Complexity of the Quantum Adiabatic Algorithm for certain Satisfiability Problems"
+
 May 10th
+
+    1h Implement greedy and greedy redux algorithms for comparison
+    1h Finish outline for interface comparison paper
+    1h Work on draft of interface comparison paper
+    1h Print and read "Programming with the DWave" white paper.
+    1h Further investigation of Grover's algorithm in general
+    1h Closer look at IBM QE classical subroutines
+    1h Take notes (physical, paper) on the Oracle matrix in the two qubit example. 
 
 May 11th
 
+    .5h Run and verify two qubit version of Grover's algorithm
+    1h Take notes and replicate Oracle matrix and Grover operator, create outline for building each on a system with more qubits.
+    2h Read Nielsen and Chaung chapter on Quantum Search
+    .5h Read Nielsen and Chaung chapter on reversible classical circuits
+    .1h Read "Quantum Search Algorithms" by Andris Ambainis
+    .1h Read "Classical and Quantum Algorithms for the Boolean Satisfiability Problem" by Carlos Barron-Romero
+    .5h Review "A fast quantum mechanical algorithm for database search" by Lov K. Grover
+    1h Additional work on interface paper draft
+
 May 12th
+
+    1h Work out instances of Grover's algorithm on paper
+    1h Print and review: (CMU CS Lecture 4: Grover's Algorithm, CERN: The Quantum Query Complexity of 0-1 Knapsack)
+    1h Investigate IBM Quantum Experience Python interface
+    .1h Correspondence with On-Campus mentor
+    3h Work on Final Paper and Reflective Essay
 
 Week two journal
 
+    As this project comes to a close, I feel that I've gained a layprogrammers perspective of running NP-Complete problems on different types of Quantum Computers.
+    Since I'm unaffiliated with either IBM, Los Alamos, or DWave, I've been able to approach the problem from a neutral perspective, and recognize both the flaws and benefits of each implementation.
+    In addition, I've grown close to the problem itself. I see instances of it in my daily life, and am continually impressed by how subtle it is.
+    For instance, while I was completing my senior experience I was simultaneously hunting craigslist for used cars.
+    I wanted to find a car with good mileage, high safety, enjoyable peripherals (like a stereo), and a low odometer reading, for the lowest price possible. 
+    Surprisingly, this is essentially an instance of the knapsack problem! At home, at school, and in business, the Knapsack problem shows up: What is the optimal subset of items in a collection?
+    I've also learned about research in general. Over the course of this project, I've read about thirty papers, not including the websites and online documentation I've worked through. Doing this project has shown me how to do research quickly and effectively, and summarize it without making costly innacuracies.
+    Everything that I've learned on this project will apply to my job, as well as to my life in general. This has been an excellent experience, and I plan on doing something similar in the future, even if my school does not require me to.
+
 May 15th
+    4h Report first draft
+    1h Correspondence with off campus mentor
+    .5h Review slides from salishan 2017 conference
+    .5h Review alternate gate model programming techniques (QML, QCL)
+    1h Run Grover's algorithm with different settings on IBM Quantum Experience, compare to DWave results for same problem
+    2h Additional work on report, presentation
+    1h Add robust benchmarking options for classical implementations
 
 May 16th
+    (pre)
+    Grover's timing info comparison for paper
+    Additional correspondence
+    Alternate interfaces for paper
+    Slides review (check for finding inaccuracies in my work)
+    Paper school-suitable draft
+    Presentation finishing touches and practice
+
+May 17th
+    (pre)
+    Presentation practice and preparation
+
+Post May 17th
+    Polished paper draft w/ benchmarks, citations, no inaccuracies ( for Los Alamos/personal interest )
+

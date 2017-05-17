@@ -13,6 +13,8 @@ Basic command-line usage:
 ./qnp.py solve single.csv            # Output classical solution for csv instance of knapsack problem
 ./qnp.py run knapsack.v              # Run a verilog circuit w/ qbsolv
 ./qnp.py show knapsack.v             # Build pre/post optiization images of a circuit (using scripts/optshow.ys and scripts/show.ys)
+
+./qnp.py quant_exp # Show the results of grover's algorithm for a user's IBM account (Circuit must contain "grover" in name)
 ```
 
 QNP has the following dependencies:
@@ -28,3 +30,5 @@ yosys
 
 verilator
 
+IBM Quantum Experience SDK (pip install IBMQuantumExperience)
+Requires token "IBMtoken" in `etc` folder
