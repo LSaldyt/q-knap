@@ -2,6 +2,8 @@
 
 This repository includes programs and tools used to investigate the use of Los Alamos's DWave computer to solve NP-Complete problems, like the Knapsack problem.
 
+See: [paper](/papers/paper.pdf) and [presentation](https://docs.google.com/presentation/d/1MmBIWg91pXa3afNZzdnivI4oPqkCPv60BeWVYiGxymg/edit?usp=sharing)
+
 Basic command-line usage:
 
 ```
